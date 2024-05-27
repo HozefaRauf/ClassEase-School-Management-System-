@@ -10,7 +10,7 @@ import StudentLogin from './src/StudentLogin';
 import TeacherLogin from './src/TeacherLogin';
 import AdminLogin from './src/AdminLogin';
 import Practice from './src/Practice';
-
+import dashboard from './src/Studentdashboard';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +23,7 @@ function App() {
         <Stack.Screen name="TeacherLogin" component={TeacherLogin} />
         <Stack.Screen name="AdminLogin" component={AdminLogin} />
         <Stack.Screen name="Practice" component={Practice} />
+        <Stack.Screen name="Dashboard" component={dashboard} />
 
       </Stack.Navigator>
     </NavigationContainer>

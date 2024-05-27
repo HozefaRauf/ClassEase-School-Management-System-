@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import Background from './Background';
 import Field from './Field';
 import Btn from './Btn';
+import dashboard from './Studentdashboard';
 
 const StudentLogin = (props) => {
     return (
@@ -14,7 +15,7 @@ const StudentLogin = (props) => {
                 <View style={styles.forgotView}>
                     <Text style={styles.forgot}>Forgot Password?</Text>
                 </View>
-                <Btn pad={12} bgColor='black' textColor='white' btnText='Login' Press={() =>console.log("Login")}/>
+                <Btn pad={12} bgColor='black' textColor='white' btnText='Login' Press={() =>props.navigation.navigate("Dashboard")}/>
             </View>
         </Background>
     );
