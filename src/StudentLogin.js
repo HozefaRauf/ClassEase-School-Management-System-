@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 import Background from './Background';
 import Field from './Field';
 import Btn from './Btn';
@@ -16,6 +17,7 @@ const StudentLogin = (props) => {
                     <Text style={styles.forgot}>Forgot Password?</Text>
                 </View>
                 <Btn pad={12} bgColor='black' textColor='white' btnText='Login' Press={() =>props.navigation.navigate("StudentDashboard")}/>
+                <Text>{message}</Text>
             </View>
         </Background>
     );
