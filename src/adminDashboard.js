@@ -50,12 +50,14 @@ const AdminPortal = ({ navigation }) => {
                     <TextInput
                         style={styles.input}
                         placeholder="Registration Number"
+                        placeholderTextColor="black"
                         value={feeStatus.registrationNumber}
                         onChangeText={(text) => setFeeStatus({ ...feeStatus, registrationNumber: text })}
                     />
                     <TextInput
                         style={styles.input}
                         placeholder="Student Name"
+                        placeholderTextColor="black"
                         value={feeStatus.studentName}
                         onChangeText={(text) => setFeeStatus({ ...feeStatus, studentName: text })}
                     />
