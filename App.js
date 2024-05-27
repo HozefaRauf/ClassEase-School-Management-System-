@@ -11,6 +11,7 @@ import TeacherLogin from './src/TeacherLogin';
 import AdminLogin from './src/AdminLogin';
 import Practice from './src/Practice';
 import dashboard from './src/Studentdashboard';
+import AdminPortal from './src/adminDashboard';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +24,8 @@ function App() {
         <Stack.Screen name="TeacherLogin" component={TeacherLogin} />
         <Stack.Screen name="AdminLogin" component={AdminLogin} />
         <Stack.Screen name="Practice" component={Practice} />
-        <Stack.Screen name="Dashboard" component={dashboard} />
+        <Stack.Screen name="StudentDashboard" component={dashboard} />
+        <Stack.Screen name="AdminDashboard" component={AdminPortal} />
 
       </Stack.Navigator>
     </NavigationContainer>

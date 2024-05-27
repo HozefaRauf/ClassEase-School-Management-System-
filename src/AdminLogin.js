@@ -4,7 +4,7 @@ import Background from './Background';
 import Field from './Field';
 import Btn from './Btn';
 
-const AdminLogin = () => {
+const AdminLogin = (props) => {
     return (
         <Background>
             <View style={styles.container}>
@@ -14,7 +14,7 @@ const AdminLogin = () => {
                 <View style={styles.forgotView}>
                     <Text style={styles.forgot}>Forgot Password?</Text>
                 </View>
-                <Btn pad={12} bgColor='black' textColor='white' btnText='Login' Press={() =>console.log("Login")}/>
+                <Btn pad={12} bgColor='black' textColor='white' btnText='Login' Press={() =>props.navigation.navigate("AdminDashboard")}/>
 
             </View>
         </Background>

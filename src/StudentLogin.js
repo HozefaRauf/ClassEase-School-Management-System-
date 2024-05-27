@@ -15,7 +15,7 @@ const StudentLogin = (props) => {
                 <View style={styles.forgotView}>
                     <Text style={styles.forgot}>Forgot Password?</Text>
                 </View>
-                <Btn pad={12} bgColor='black' textColor='white' btnText='Login' Press={() =>props.navigation.navigate("Dashboard")}/>
+                <Btn pad={12} bgColor='black' textColor='white' btnText='Login' Press={() =>props.navigation.navigate("StudentDashboard")}/>
             </View>
         </Background>
     );
