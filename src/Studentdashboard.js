@@ -25,7 +25,7 @@ const Dashboard = (props) => {
                         </View>
                     ))} */}
                     <Text style={styles.subtitle}>Timetable</Text>
-                    <Btn pad={12} bgColor='green' textColor='white' btnText='TimeTable' Press={() =>props.navigation.navigate("Dashboard")}/>
+                    <Btn pad={12} bgColor='green' textColor='white' btnText='TimeTable' Press={() =>props.navigation.navigate("StudentTimetable")}/>
                     {/* {timetable && (
                         <Image source={{ uri: timetable }} style={styles.image} />
                     )} */}

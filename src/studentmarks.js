@@ -4,15 +4,18 @@ import { ScrollView,
     StyleSheet
 
  } from "react-native"
+ import React from 'react';
+ import Btn from './Btn';
+ import Background from './Background';
 
  import { TextInput, DataTable } from "react-native-paper";
 
 
-const studentMarks = () => {
+const studentMarks = (props) => {
 
 
     return(
-
+        <Background>
         <View style={styles.container}>
                 <DataTable style = {styles.table}>
                     <DataTable.Header style={styles.head}>
@@ -44,7 +47,9 @@ const studentMarks = () => {
 
                     
                 </DataTable>
+                <Btn pad={12} bgColor='green' textColor='white' btnText='Back' Press={() =>props.navigation.navigate("StudentDashboard")}/>
             </View>
+            </Background>
         
     );
 }
