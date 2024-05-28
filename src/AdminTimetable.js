@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image 
 import Background from './Background';
 import Btn from './Btn';
 
-const AdminPortal = (props) => {
+const AdminTimetable = (props) => {
     const [feeStatus, setFeeStatus] = useState({
         registrationNumber: '',
         studentName: '',
@@ -40,62 +40,17 @@ const AdminPortal = (props) => {
     const handleUploadSyllabus = (className) => {
         // Handle uploading syllabus for a specific class
     };
-    const handleLogout = () => {};
 
     return (
         <Background>
             <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.section}>
                 <Text style={styles.title}>Admin Portal</Text>
-                    <View style={styles.buttonRow}>
-                        <TouchableOpacity style={styles.button}>
-                            <Image source={require('./assets/graduates.png')} style={styles.smimage} />
-                            <Text style={styles.bntText}>Student</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("AdminSyllabus")}>
-                            <Image 
-                                source={require('./assets/teacher.png')} 
-                                style={styles.smimage} 
-                            />
-                            <Text style={styles.bntText}>Teacher</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("AdminSyllabus")}>
-                            <Image 
-                                source={require('./assets/syllabus.png')} 
-                                style={styles.smimage} 
-                            />
-                            <Text style={styles.bntText}>Syllabus</Text>
-                        </TouchableOpacity>
-                                              
-                    </View>
+                                
+                    <Text style={styles.subtitle}>Timetable Management</Text>
+                    <Btn pad={12} bgColor='green' textColor='white' btnText='Upload Timetable' Press={handleUploadTimetable} />
+                    {/* Render timetable if available */}
                     
-                    <View style={styles.buttonRow}>
-                    <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("AdminFee")}>
-                            <Image 
-                                source={require('./assets/fees.png')} 
-                                style={styles.smimage} 
-                            />
-                            <Text style={styles.bntText}>Fees</Text>
-                        </TouchableOpacity> 
-                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("AdminReport")}>
-                            <Image 
-                                source={require('./assets/report.png')} 
-                                style={styles.smimage} 
-                            />
-                            <Text style={styles.bntText}>Report</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("AdminTimetable")}>
-                            <Image 
-                                source={require('./assets/timetable.png')} 
-                                style={styles.smimage} 
-                            />
-                            <Text style={styles.bntText}>Timetable</Text>
-                        </TouchableOpacity>
-                                              
-                    </View>
-                                        
-                    
-                    <Btn pad={12} bgColor='green' textColor='white' btnText='Logout' Press={handleLogout} />
                 </View>
             </ScrollView>
         </Background>
@@ -183,4 +138,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AdminPortal;
+export default AdminTimetable;
