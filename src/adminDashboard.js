@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, ScrollView, TextInput } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image } from 'react-native';
 import Background from './Background';
 import Btn from './Btn';
 
@@ -45,7 +45,12 @@ const AdminPortal = ({ navigation }) => {
         <Background>
             <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.section}>
-                    <Text style={styles.title}>Admin Portal</Text>
+                <Text style={styles.title}>Admin Portal</Text>
+                    <TouchableOpacity style={styles.button}>
+                        <Image source={require('./assets/graduates.png')} style={styles.smimage} />
+                        <Text style={styles.bntText}>Student</Text>
+                    </TouchableOpacity>
+                    
                     <Text style={styles.subtitle}>Manage Fee Status</Text>
                     <TextInput
                         style={styles.input}
@@ -142,6 +147,27 @@ const styles = StyleSheet.create({
         height: 200,
         marginBottom: 10,
     },
+    button: {
+        width: 100,
+        height: 100,
+        display: 'flex',
+        marginBottom: 30,
+        
+    },
+    smimage: {
+        width: 80,
+        height: 80,
+        marginBottom: 10,
+        alignSelf: 'center',
+    },
+    bntText:{
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'black',
+        alignSelf: 'center',
+        
+        marginBottom: 30,
+    }
 });
 
 export default AdminPortal;
