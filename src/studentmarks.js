@@ -11,7 +11,7 @@ import { ScrollView,
  import { TextInput, DataTable } from "react-native-paper";
 
 
-const studentMarks = (props) => {
+const StudentMarks = (props) => {
 
 
     return(
@@ -97,4 +97,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default studentMarks;
+export default StudentMarks;
