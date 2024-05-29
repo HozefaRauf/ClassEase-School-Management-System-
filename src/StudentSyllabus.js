@@ -2,10 +2,10 @@ import React from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import Btn from './Btn';
 
-const StudentTimetable = ({ navigation }) => {
+const StudentSyllabus = ({ navigation }) => {
     return (
         <View style={styles.container}>
-            <Image source={require('./assets/timetable.jpeg')} style={styles.pic} />
+            <Image source={require('./assets/syllabus.jpg')} style={styles.pic} />
         </View>
     );
 }
@@ -25,4 +25,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default StudentTimetable;
+export default StudentSyllabus;
