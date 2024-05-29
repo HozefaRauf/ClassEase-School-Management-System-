@@ -11,7 +11,7 @@ const Dashboard = (props) => {
                 <View style={styles.section}>
                     <Text style={styles.title}>Student Portal</Text>
                     <Text style={styles.subtitle}>Marks</Text>
-                    <Btn pad={12} bgColor='green' textColor='white' btnText='Marks' Press={() =>props.navigation.navigate("studentMarks")}/>
+                    <Btn pad={12} bgColor='green' textColor='white' btnText='Marks' Press={() =>props.navigation.navigate("StudentMarks")}/>
                     {/* {marks.map((mark, index) => (
                         <View key={index}>
                             <Text style={styles.markText}>{mark.subject} ({mark.term}): {mark.marksObtained}</Text>
@@ -25,7 +25,7 @@ const Dashboard = (props) => {
                         </View>
                     ))} */}
                     <Text style={styles.subtitle}>Timetable</Text>
-                    <Btn pad={12} bgColor='green' textColor='white' btnText='TimeTable' Press={() =>props.navigation.navigate("Dashboard")}/>
+                    <Btn pad={12} bgColor='green' textColor='white' btnText='TimeTable' Press={() =>props.navigation.navigate("StudentTimetable")}/>
                     {/* {timetable && (
                         <Image source={{ uri: timetable }} style={styles.image} />
                     )} */}

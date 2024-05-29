@@ -13,8 +13,19 @@ import Practice from './src/Practice';
 import dashboard from './src/Studentdashboard';
 import AdminPortal from './src/adminDashboard';
 import TeacherDashboard from './src/TeacherDashboard';
+<<<<<<< HEAD
 import studentMarks from './src/studentmarks.js';
 import StudentCURD from './src/StudentCURD.js';
+=======
+import StudentMarks from './src/Studentmarks.js';
+import StudentTimetable from './src/StudentTimetable.js';
+import AdminSyllabus from './src/AdminSyllabus.js';
+import AdminFee from './src/AdminFee.js';
+import AdminReport from './src/AdminReport.js';
+import AdminTimetable from './src/AdminTimetable.js';
+import TeacherMarks from './src/TeacherMarks.js';
+import ClassLookup from './src/ClassLookup.js';
+>>>>>>> da7c074f558b3b4c5ba75722ac54126c3a021084
 
 const Stack = createNativeStackNavigator();
 
@@ -31,7 +42,14 @@ function App() {
         <Stack.Screen name="AdminDashboard" component={AdminPortal} />
         <Stack.Screen name="StudentCRUD" component={StudentCURD} />
         <Stack.Screen name="TeacherDashboard" component={TeacherDashboard} />
-        <Stack.Screen name="studentMarks" component={studentMarks} />
+        <Stack.Screen name="StudentMarks" component={StudentMarks} />
+        <Stack.Screen name="StudentTimetable" component={StudentTimetable} />
+        <Stack.Screen name="AdminSyllabus" component={AdminSyllabus} />
+        <Stack.Screen name="AdminFee" component={AdminFee} />
+        <Stack.Screen name="AdminReport" component={AdminReport} />
+        <Stack.Screen name="AdminTimetable" component={AdminTimetable} />
+        <Stack.Screen name="TeacherMarks" component={TeacherMarks} />
+        <Stack.Screen name="ClassLookup" component={ClassLookup} />
 
       </Stack.Navigator>
     </NavigationContainer>

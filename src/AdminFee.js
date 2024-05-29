@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image } from 'react-native';
 import Background from './Background';
-import auth from '@react-native-firebase/auth';
 import Btn from './Btn';
-import 'firebase/firestore';
-import Home from './Home';
 
-const AdminPortal = (props) => {
+const AdminFee = (props) => {
     const [feeStatus, setFeeStatus] = useState({
         registrationNumber: '',
         studentName: '',
@@ -31,28 +28,14 @@ const AdminPortal = (props) => {
     const handleAddFeeStatus = () => {
         // Handle adding fee status
     };
-
-    const fetchReports = () => {
-        // Fetch reports
-    };
-
-    const handleUploadTimetable = () => {
-        // Handle uploading timetable
-    };
-
-    const handleUploadSyllabus = (className) => {
-        // Handle uploading syllabus for a specific class
-    };
-   
     return (
         <Background>
             <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.section}>
                 <Text style={styles.title}>Admin Portal</Text>
-                    <TouchableOpacity style={styles.button}>
-                        <Image source={require('./assets/graduates.png')} style={styles.smimage} />
-                        <Text style={styles.bntText}>Student</Text>
-                    </TouchableOpacity>
+                    
+                    
+                    
                     
                     <Text style={styles.subtitle}>Manage Fee Status</Text>
                     <TextInput
@@ -71,23 +54,8 @@ const AdminPortal = (props) => {
                     />
                     {/* Add other input fields for fee status here */}
                     <Btn pad={12} bgColor='green' textColor='white' btnText='Add Fee Status' Press={handleAddFeeStatus} />
+                  
                     
-                    <Text style={styles.subtitle}>Reports</Text>
-                    {/* Render reports here */}
-                    
-                    <Text style={styles.subtitle}>Timetable Management</Text>
-                    <Btn pad={12} bgColor='green' textColor='white' btnText='Upload Timetable' Press={handleUploadTimetable} />
-                    {/* Render timetable if available */}
-                    
-                    <Text style={styles.subtitle}>Syllabus Management</Text>
-                    {classes.map((className, index) => (
-                        <View key={index}>
-                            <Text style={styles.classText}>{className}</Text>
-                            <Btn pad={12} bgColor='green' textColor='white' btnText='Upload Syllabus' Press={() => handleUploadSyllabus(className)} />
-                            {/* Render syllabus for the specific class here */}
-                        </View>
-                    ))}
-                    {/* Render uploaded syllabus */}
                 </View>
             </ScrollView>
         </Background>
@@ -175,4 +143,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AdminPortal;
+export default AdminFee;
