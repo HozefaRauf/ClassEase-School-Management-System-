@@ -19,6 +19,7 @@ import AdminSyllabus from './src/AdminSyllabus.js';
 import AdminFee from './src/AdminFee.js';
 import AdminReport from './src/AdminReport.js';
 import AdminTimetable from './src/AdminTimetable.js';
+import TeacherMarks from './src/TeacherMarks.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +41,7 @@ function App() {
         <Stack.Screen name="AdminFee" component={AdminFee} />
         <Stack.Screen name="AdminReport" component={AdminReport} />
         <Stack.Screen name="AdminTimetable" component={AdminTimetable} />
+        <Stack.Screen name="TeacherMarks" component={TeacherMarks} />
 
       </Stack.Navigator>
     </NavigationContainer>

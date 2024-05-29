@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image } from 'react-native';
 import Background from './Background';
-import auth from '@react-native-firebase/auth';
 import Btn from './Btn';
 import 'firebase/firestore';
 import Home from './Home';
 import Dashboard from './Studentdashboard';
+import firestore from '@react-native-firebase/firestore';
 
 const TeacherDashboard = (props) => {
     
+ 
    
 
-    useEffect(() => {
-        // Fetch initial data
-        //fetchReports(); // Uncomment if reports are to be fetched initially
-    }, []);
+    
     
     return (
         <Background>
@@ -22,11 +20,11 @@ const TeacherDashboard = (props) => {
                 <View style={styles.section}>
                 <Text style={styles.title}>Teacher Portal</Text>
                     <View style={styles.buttonRow}>
-                        <TouchableOpacity style={styles.button}>
+                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("TeacherMarks")} >
                             <Image source={require('./assets/viewmarks.png')} style={styles.smimage} />
                             <Text style={styles.bntText}>View Marks</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("AdminTimetable")}>
+                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("TeacherMarks")}>
                             <Image 
                                 source={require('./assets/timetable.png')} 
                                 style={styles.smimage} 
