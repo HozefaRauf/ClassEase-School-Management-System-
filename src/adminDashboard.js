@@ -46,7 +46,7 @@ const AdminPortal = ({ navigation }) => {
             <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.section}>
                 <Text style={styles.title}>Admin Portal</Text>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('StudentCRUD')}>
                         <Image source={require('./assets/graduates.png')} style={styles.smimage} />
                         <Text style={styles.bntText}>Student</Text>
                     </TouchableOpacity>
