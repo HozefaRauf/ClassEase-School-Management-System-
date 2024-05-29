@@ -53,7 +53,7 @@ const AdminPortal = (props) => {
                 <View style={styles.section}>
                 <Text style={styles.title}>Admin Portal</Text>
                     <View style={styles.buttonRow} >
-                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("StudentCURD")}>
+                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("StudentCRUD")}>
                             <Image source={require('./assets/graduates.png')} style={styles.smimage} />
                             <Text style={styles.bntText}>Student</Text>
                         </TouchableOpacity>
