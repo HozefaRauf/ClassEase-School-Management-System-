@@ -24,7 +24,7 @@ const TeacherDashboard = (props) => {
                             <Image source={require('./assets/viewmarks.png')} style={styles.smimage} />
                             <Text style={styles.bntText}>View Marks</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("TeacherMarks")}>
+                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("ClassLookup")}>
                             <Image 
                                 source={require('./assets/timetable.png')} 
                                 style={styles.smimage} 

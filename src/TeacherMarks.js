@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Alert, TextInput,ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Alert, TextInput, ScrollView } from 'react-native';
 import Background from './Background';
 import Btn from './Btn';
 import firestore from '@react-native-firebase/firestore';
@@ -10,16 +10,16 @@ const TeacherMarks = (props) => {
         try {
             console.log(`Fetching student with registration number: ${regNo}`);
             const querySnapshot = await firestore().collection('students').where('registrationNumber', '==', regNo).get();
-            
+
             if (querySnapshot.empty) {
                 console.log('No student found with this registration number.');
                 throw new Error('No student found with this registration number.');
             }
-            
+
             const studentDoc = querySnapshot.docs[0];
             const studentData = studentDoc.data();
             const studentId = studentDoc.id; // Get the student document ID
-            
+
             return { studentData, studentId };
         } catch (error) {
             console.error("Error fetching student class:", error);
@@ -30,11 +30,11 @@ const TeacherMarks = (props) => {
     const fetchFirstTermMarks = async (studentId) => {
         try {
             const marksDoc = await firestore().collection('students').doc(studentId).collection('English').doc('first').get();
-            
+
             if (!marksDoc.exists) {
                 throw new Error('No marks found for this student.');
             }
-            
+
             const marksData = marksDoc.data();
             return marksData;
         } catch (error) {
@@ -46,11 +46,11 @@ const TeacherMarks = (props) => {
     const fetchMidTermMarks = async (studentId) => {
         try {
             const marksDoc = await firestore().collection('students').doc(studentId).collection('English').doc('mid').get();
-            
+
             if (!marksDoc.exists) {
                 throw new Error('No marks found for this student.');
             }
-            
+
             const marksData = marksDoc.data();
             return marksData;
         } catch (error) {
@@ -62,11 +62,11 @@ const TeacherMarks = (props) => {
     const fetchFinalTermMarks = async (studentId) => {
         try {
             const marksDoc = await firestore().collection('students').doc(studentId).collection('English').doc('final').get();
-            
+
             if (!marksDoc.exists) {
                 throw new Error('No marks found for this student.');
             }
-            
+
             const marksData = marksDoc.data();
             return marksData;
         } catch (error) {
@@ -102,6 +102,39 @@ const TeacherMarks = (props) => {
         } catch (error) {
             console.error("Error updating final term marks:", error);
             Alert.alert('Error updating final term marks: ', error.message);
+        }
+    };
+
+    const deleteFirstTermMarks = async (studentId) => {
+        try {
+            await firestore().collection('students').doc(studentId).collection('English').doc('first').delete();
+            Alert.alert('First term marks deleted successfully!');
+            setFirstTermMarks('');
+        } catch (error) {
+            console.error("Error deleting first term marks:", error);
+            Alert.alert('Error deleting first term marks: ', error.message);
+        }
+    };
+
+    const deleteMidTermMarks = async (studentId) => {
+        try {
+            await firestore().collection('students').doc(studentId).collection('English').doc('mid').delete();
+            Alert.alert('Mid term marks deleted successfully!');
+            setMidTermMarks('');
+        } catch (error) {
+            console.error("Error deleting mid term marks:", error);
+            Alert.alert('Error deleting mid term marks: ', error.message);
+        }
+    };
+
+    const deleteFinalTermMarks = async (studentId) => {
+        try {
+            await firestore().collection('students').doc(studentId).collection('English').doc('final').delete();
+            Alert.alert('Final term marks deleted successfully!');
+            setFinalTermMarks('');
+        } catch (error) {
+            console.error("Error deleting final term marks:", error);
+            Alert.alert('Error deleting final term marks: ', error.message);
         }
     };
 
@@ -204,55 +237,87 @@ const TeacherMarks = (props) => {
         }
     };
 
+    const handleDeleteFirstTermMarks = async () => {
+        try {
+            await deleteFirstTermMarks(studentInfo.studentId);
+        } catch (error) {
+            console.error('Error deleting first term marks:', error);
+        }
+    };
+
+    const handleDeleteMidTermMarks = async () => {
+        try {
+            await deleteMidTermMarks(studentInfo.studentId);
+        } catch (error) {
+            console.error('Error deleting mid term marks:', error);
+        }
+    };
+
+    const handleDeleteFinalTermMarks = async () => {
+        try {
+            await deleteFinalTermMarks(studentInfo.studentId);
+        } catch (error) {
+            console.error('Error deleting final term marks:', error);
+        }
+    };
+
     return (
         <Background>
-         <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-            <View style={styles.container}>
-                <Text style={styles.title}>Student Class Lookup</Text>
-                <Field
-                    placeholder="Enter Registration Number"
-                    keyboardType="numeric"
-                    value={registrationNumber}
-                    onChangeText={setRegistrationNumber}
-                />
-                <Btn pad={12} bgColor='black' textColor='white' btnText='Lookup' Press={handleLookup} />
-                {studentInfo && (
-                    <View style={styles.resultContainer}>
-                        <Text style={styles.resultText}>Student Name: {studentInfo.name}</Text>
-                        <Text style={styles.resultText}>Current Class: {studentInfo.class}</Text>
-                        <Text style={styles.resultText}>First Term Marks: </Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="First Term Marks"
-                            keyboardType="numeric"
-                            value={firstTermMarks}
-                            onChangeText={(text) => handleMarksChange(text, 'first')}
-                        />
-                        <Btn pad={12} bgColor='green' textColor='white' btnText='Update First Term Marks' Press={handleUpdateFirstTermMarks} />
+            <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+                <View style={styles.container}>
+                    <Text style={styles.title}>Student Class Lookup</Text>
+                    <Field
+                        placeholder="Enter Registration Number"
+                        keyboardType="numeric"
+                        value={registrationNumber}
+                        onChangeText={setRegistrationNumber}
+                    />
+                    <Btn pad={12} bgColor='black' textColor='white' btnText='Lookup' Press={handleLookup} />
+                    {studentInfo && (
+                        <View style={styles.resultContainer}>
+                            <Text style={styles.resultText}>Student Name: {studentInfo.name}</Text>
+                            <Text style={styles.resultText}>Current Class: {studentInfo.class}</Text>
+                            <Text style={styles.resultText}>First Term Marks: </Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="First Term Marks"
+                                keyboardType="numeric"
+                                value={firstTermMarks}
+                                onChangeText={(text) => handleMarksChange(text, 'first')}
+                            />
+                            <View style={styles.buttonContainer}>
+                                <Btn pad={12} bgColor='green' textColor='white' btnText='Update' Press={handleUpdateFirstTermMarks} />
+                                <Btn pad={12} bgColor='red' textColor='white' btnText='Delete' Press={handleDeleteFirstTermMarks} />
+                            </View>
 
-                        <Text style={styles.resultText}>Mid Term Marks: </Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Mid Term Marks"
-                            keyboardType="numeric"
-                            value={midTermMarks}
-                            onChangeText={(text) => handleMarksChange(text, 'mid')}
-                        />
-                        <Btn pad={12} bgColor='green' textColor='white' btnText='Update Mid Term Marks' Press={handleUpdateMidTermMarks} />
+                            <Text style={styles.resultText}>Mid Term Marks: </Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Mid Term Marks"
+                                keyboardType="numeric"
+                                value={midTermMarks}
+                                onChangeText={(text) => handleMarksChange(text, 'mid')}
+                            />
+                            <View style={styles.buttonContainer}>
+                                <Btn pad={12} bgColor='green' textColor='white' btnText='Update' Press={handleUpdateMidTermMarks} />
+                                <Btn pad={12} bgColor='red' textColor='white' btnText='Delete' Press={handleDeleteMidTermMarks} />
+                            </View>
 
-                        <Text style={styles.resultText}>Final Term Marks: </Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Final Term Marks"
-                            keyboardType="numeric"
-                            value={finalTermMarks}
-                            onChangeText={(text) => handleMarksChange(text, 'final')}
-                        />
-                        <Btn pad={12} bgColor='green' textColor='white' btnText='Update Final Term Marks' Press={handleUpdateFinalTermMarks} />
-                    </View>
-                    
-                )}
-            </View>
+                            <Text style={styles.resultText}>Final Term Marks: </Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Final Term Marks"
+                                keyboardType="numeric"
+                                value={finalTermMarks}
+                                onChangeText={(text) => handleMarksChange(text, 'final')}
+                            />
+                            <View style={styles.buttonContainer}>
+                                <Btn pad={12} bgColor='green' textColor='white' btnText='Update' Press={handleUpdateFinalTermMarks} />
+                                <Btn pad={12} bgColor='red' textColor='white' btnText='Delete' Press={handleDeleteFinalTermMarks} />
+                            </View>
+                        </View>
+                    )}
+                </View>
             </ScrollView>
         </Background>
     );
@@ -270,16 +335,20 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
+        color: 'black',
         textAlign: 'center',
     },
     resultContainer: {
         marginTop: 20,
         alignItems: 'center',
+        fontWeight: 'bold',
     },
     resultText: {
         fontSize: 18,
         marginBottom: 10,
         color: 'black',
+        fontWeight: 'bold',
+        alignSelf: 'flex-start',
     },
     input: {
         borderWidth: 1,
@@ -290,8 +359,14 @@ const styles = StyleSheet.create({
         width: '80%',
         textAlign: 'center',
         color: 'black',
+        fontWeight: 'bold',
+    },
+    buttonContainer: {
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        width: '40%',
+        marginBottom: 10,
     },
 });
 
 export default TeacherMarks;
-
