@@ -13,11 +13,8 @@ import Practice from './src/Practice';
 import dashboard from './src/Studentdashboard';
 import AdminPortal from './src/adminDashboard';
 import TeacherDashboard from './src/TeacherDashboard';
-<<<<<<< HEAD
-import studentMarks from './src/studentmarks.js';
 import StudentCURD from './src/StudentCURD.js';
-=======
-import StudentMarks from './src/Studentmarks.js';
+import StudentMarks from './src/studentmarks.js';
 import StudentTimetable from './src/StudentTimetable.js';
 import AdminSyllabus from './src/AdminSyllabus.js';
 import AdminFee from './src/AdminFee.js';
@@ -25,7 +22,6 @@ import AdminReport from './src/AdminReport.js';
 import AdminTimetable from './src/AdminTimetable.js';
 import TeacherMarks from './src/TeacherMarks.js';
 import ClassLookup from './src/ClassLookup.js';
->>>>>>> da7c074f558b3b4c5ba75722ac54126c3a021084
 
 const Stack = createNativeStackNavigator();
 
