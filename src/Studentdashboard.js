@@ -18,7 +18,7 @@ const Dashboard = (props) => {
                         </View>
                     ))} */}
                     <Text style={styles.subtitle}>Fee Status</Text>
-                    <Btn pad={12} bgColor='green' textColor='white' btnText='Fee Status' Press={() =>props.navigation.navigate("Dashboard")}/>
+                    <Btn pad={12} bgColor='green' textColor='white' btnText='Fee Status' Press={() =>props.navigation.navigate("StudentFees")}/>
                     {/* {feeStatus.map((fee, index) => (
                         <View key={index}>
                             <Text style={styles.feeText}>{fee.amountDue} - {fee.amountPaid} - {fee.payableAmount} - {fee.paymentDate}</Text>

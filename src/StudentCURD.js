@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList } from 'r
 import firestore from '@react-native-firebase/firestore';
 import Background from './Background';
 
-const StudentCRUD = ({ navigation,props }) => {
+const StudentCURD = ({ navigation,props }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [students, setStudents] = useState([]);
     const [filteredStudents, setFilteredStudents] = useState([]);
@@ -120,6 +120,6 @@ const styles = StyleSheet.create({
     },
 });
 
-export default StudentCRUD;
+export default StudentCURD;
 
 
