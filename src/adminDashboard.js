@@ -35,6 +35,9 @@ const AdminPortal = (props) => {
     const fetchReports = () => {
         // Fetch reports
     };
+    const handleLogout = () => {
+        // Fetch reports
+    };
 
     const handleUploadTimetable = () => {
         // Handle uploading timetable
@@ -49,45 +52,55 @@ const AdminPortal = (props) => {
             <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.section}>
                 <Text style={styles.title}>Admin Portal</Text>
-                    <TouchableOpacity style={styles.button}>
-                        <Image source={require('./assets/graduates.png')} style={styles.smimage} />
-                        <Text style={styles.bntText}>Student</Text>
-                    </TouchableOpacity>
+                    <View style={styles.buttonRow} >
+                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("StudentCURD")}>
+                            <Image source={require('./assets/graduates.png')} style={styles.smimage} />
+                            <Text style={styles.bntText}>Student</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("AdminSyllabus")}>
+                            <Image 
+                                source={require('./assets/teacher.png')} 
+                                style={styles.smimage} 
+                            />
+                            <Text style={styles.bntText}>Teacher</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("AdminSyllabus")}>
+                            <Image 
+                                source={require('./assets/syllabus.png')} 
+                                style={styles.smimage} 
+                            />
+                            <Text style={styles.bntText}>Syllabus</Text>
+                        </TouchableOpacity>
+                                              
+                    </View>
                     
-                    <Text style={styles.subtitle}>Manage Fee Status</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Registration Number"
-                        placeholderTextColor="black"
-                        value={feeStatus.registrationNumber}
-                        onChangeText={(text) => setFeeStatus({ ...feeStatus, registrationNumber: text })}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Student Name"
-                        placeholderTextColor="black"
-                        value={feeStatus.studentName}
-                        onChangeText={(text) => setFeeStatus({ ...feeStatus, studentName: text })}
-                    />
-                    {/* Add other input fields for fee status here */}
-                    <Btn pad={12} bgColor='green' textColor='white' btnText='Add Fee Status' Press={handleAddFeeStatus} />
+                    <View style={styles.buttonRow}>
+                    <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("AdminFee")}>
+                            <Image 
+                                source={require('./assets/fees.png')} 
+                                style={styles.smimage} 
+                            />
+                            <Text style={styles.bntText}>Fees</Text>
+                        </TouchableOpacity> 
+                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("AdminReport")}>
+                            <Image 
+                                source={require('./assets/report.png')} 
+                                style={styles.smimage} 
+                            />
+                            <Text style={styles.bntText}>Report</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("AdminTimetable")}>
+                            <Image 
+                                source={require('./assets/timetable.png')} 
+                                style={styles.smimage} 
+                            />
+                            <Text style={styles.bntText}>Timetable</Text>
+                        </TouchableOpacity>
+                                              
+                    </View>
+                                        
                     
-                    <Text style={styles.subtitle}>Reports</Text>
-                    {/* Render reports here */}
-                    
-                    <Text style={styles.subtitle}>Timetable Management</Text>
-                    <Btn pad={12} bgColor='green' textColor='white' btnText='Upload Timetable' Press={handleUploadTimetable} />
-                    {/* Render timetable if available */}
-                    
-                    <Text style={styles.subtitle}>Syllabus Management</Text>
-                    {classes.map((className, index) => (
-                        <View key={index}>
-                            <Text style={styles.classText}>{className}</Text>
-                            <Btn pad={12} bgColor='green' textColor='white' btnText='Upload Syllabus' Press={() => handleUploadSyllabus(className)} />
-                            {/* Render syllabus for the specific class here */}
-                        </View>
-                    ))}
-                    {/* Render uploaded syllabus */}
+                    <Btn pad={12} bgColor='green' textColor='white' btnText='Logout' Press={handleLogout} />
                 </View>
             </ScrollView>
         </Background>
