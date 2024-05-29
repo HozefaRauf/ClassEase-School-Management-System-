@@ -29,7 +29,7 @@ const AdminReport = (props) => {
     const fetchReports = () => {
         // Fetch reports
     };
-
+    const handleReport=() => {};
    
 
     
@@ -38,6 +38,7 @@ const AdminReport = (props) => {
             <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.section}>                  
                     <Text style={styles.subtitle}>Reports</Text>
+                    <Btn pad={12} bgColor='green' textColor='white' btnText='Generate Report' Press={handleReport} />
                     {/* Render reports here */}
                     
                   

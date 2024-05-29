@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image } from 'react-native';
 import Background from './Background';
 import Btn from './Btn';
-
+import Field from './Field';
 const AdminTimetable = (props) => {
     const [feeStatus, setFeeStatus] = useState({
         registrationNumber: '',
@@ -48,6 +48,8 @@ const AdminTimetable = (props) => {
                 <Text style={styles.title}>Admin Portal</Text>
                                 
                     <Text style={styles.subtitle}>Timetable Management</Text>
+                    <Field placeholder="Enter class" textColor="black" ></Field>
+                    
                     <Btn pad={12} bgColor='green' textColor='white' btnText='Upload Timetable' Press={handleUploadTimetable} />
                     {/* Render timetable if available */}
                     

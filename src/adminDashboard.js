@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image } from 'react-native';
 import Background from './Background';
+import auth from '@react-native-firebase/auth';
 import Btn from './Btn';
+import 'firebase/firestore';
+import Home from './Home';
 
 const AdminPortal = (props) => {
     const [feeStatus, setFeeStatus] = useState({
@@ -40,8 +43,7 @@ const AdminPortal = (props) => {
     const handleUploadSyllabus = (className) => {
         // Handle uploading syllabus for a specific class
     };
-    const handleLogout = () => {};
-
+   
     return (
         <Background>
             <ScrollView contentContainerStyle={styles.container}>
