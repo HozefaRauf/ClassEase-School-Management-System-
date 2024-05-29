@@ -4,19 +4,19 @@ import Btn from './Btn';
 
 const StudentSyllabus = ({ navigation }) => {
     return (
-        <View style={styles.container}>
-            <Image source={require('./assets/syllabus.jpg')} style={styles.pic} />
+        <View style={styles.container1234}>
+           
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    container1234: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
     },
-    pic: {
+    pic1234: {
         width: 340,
         height: 220,
         borderRadius: 10,

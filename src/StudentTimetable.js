@@ -5,7 +5,7 @@ import Btn from './Btn';
 const StudentTimetable = ({ navigation }) => {
     return (
         <View style={styles.container}>
-            <Image source={require('./assets/timetable.jpeg')} style={styles.pic} />
+            
         </View>
     );
 }

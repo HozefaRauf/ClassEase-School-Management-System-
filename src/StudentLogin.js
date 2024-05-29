@@ -5,7 +5,7 @@ import Background from './Background';
 import Field from './Field';
 import Btn from './Btn';
 
-const StudentLogin = (props) => {
+const StudentLogin = ({ navigation }) => { // Destructure navigation from props
     const [message, setMessage] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -21,12 +21,14 @@ const StudentLogin = (props) => {
 
             const userDoc = querySnapshot.docs[0];
             const userData = userDoc.data();
+            console.log(userData.class);
 
             if (password !== userData.password) {
                 throw new Error('Invalid password');
             }
             
-            props.navigation.navigate("StudentDashboard", { email: email, password: password });
+            // Pass email, password, and class to the dashboard navigation parameters
+            navigation.navigate("StudentDashboard", { email: email, password: password, classes: userData.class });
         } catch (error) {
             setMessage(error.message);
         }
