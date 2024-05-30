@@ -14,7 +14,7 @@ import dashboard from './src/Studentdashboard';
 import AdminPortal from './src/adminDashboard';
 import TeacherDashboard from './src/TeacherDashboard';
 import StudentCURD from './src/StudentCURD.js';
-import StudentMarks from './src/studentmarks.js';
+import StudentMarks from './src/studentmarks.js';;
 import StudentTimetable from './src/StudentTimetable.js';
 import AdminSyllabus from './src/AdminSyllabus.js';
 import AdminFee from './src/AdminFee.js';

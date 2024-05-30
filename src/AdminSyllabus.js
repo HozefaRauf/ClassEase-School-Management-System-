@@ -1,49 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Alert, TouchableOpacity } from 'react-native';
 import Background from './Background';
-import Btn from './Btn';
+import DocumentPicker from 'react-native-document-picker';
+import storage from '@react-native-firebase/storage';
 
-const AdminSyllabus = ({ navigation,props }) => {
-    const [feeStatus, setFeeStatus] = useState({
-        registrationNumber: '',
-        studentName: '',
-        amountDue: '',
-        amountPaid: '',
-        payableAmount: '',
-        paymentDate: '',
-        lateFees: false,
-        remarks: '',
-    });
-
-    const [reports, setReports] = useState([]);
-    const [timetable, setTimetable] = useState(null);
-    const [syllabus, setSyllabus] = useState([]);
+const AdminSyllabus = ({ navigation }) => {
     const classes = ['Nursery', 'Prep', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8'];
 
-    useEffect(() => {
-        // Fetch initial data
-        //fetchReports(); // Uncomment if reports are to be fetched initially
-    }, []);
-    
-    const handleUploadSyllabus = (className) => {
-        // Handle uploading syllabus for a specific class
+    const handleUploadSyllabus = async (className) => {
+        try {
+            const result = await DocumentPicker.pick({
+                type: [DocumentPicker.types.allFiles],
+            });
+
+            const fileUri = result[0].uri;
+            const fileName = 'eigth.jpg'; 
+
+            const reference = storage().ref(`syllabus/${className}/${fileName}`);
+            const task = reference.putFile(fileUri);
+
+            task.on('state_changed', taskSnapshot => {
+                console.log(`${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`);
+            });
+
+            task.then(() => {
+                Alert.alert('Upload successful', `Syllabus for ${className} uploaded successfully.`);
+            });
+        } catch (err) {
+            if (DocumentPicker.isCancel(err)) {
+                console.log('User cancelled the document picker');
+            } else {
+                console.error("Error uploading file:", err);
+                Alert.alert('Upload failed', 'An error occurred while uploading the syllabus.');
+            }
+        }
     };
 
     return (
         <Background>
             <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.section}>
-                <Text style={styles.title}>Syllabus Management</Text>
-                                      
-                    <Text style={styles.subtitle}>Syllabus Management</Text>
+                    <Text style={styles.title}>Syllabus Management</Text>
+                    <Text style={styles.subtitle}>Upload Syllabus</Text>
                     {classes.map((className, index) => (
-                        <View key={index}>
-                            <Text style={styles.classText}>{className}</Text>
-                            <Btn pad={12} bgColor='green' textColor='white' btnText='Upload Syllabus' Press={() => handleUploadSyllabus(className)} />
-                            {/* Render syllabus for the specific class here */}
-                        </View>
+                        <TouchableOpacity key={index} onPress={() => handleUploadSyllabus(className)}>
+                            <View style={styles.classContainer}>
+                                <Text style={styles.className}>{className}</Text>
+                            </View>
+                        </TouchableOpacity>
                     ))}
-                    {/* Render uploaded syllabus */}
                 </View>
             </ScrollView>
         </Background>
@@ -52,10 +57,13 @@ const AdminSyllabus = ({ navigation,props }) => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
-        flexGrow: 1, // Ensures the content can grow and scroll if needed
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 20,
     },
     section: {
+        width: '90%',
         marginBottom: 20,
     },
     title: {
@@ -72,61 +80,21 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         color: 'black',
         paddingTop: 20,
+        textAlign: 'center',
     },
-    input: {
-        borderWidth: 1,
-        borderColor: 'gray',
-        padding: 10,
-        borderRadius: 5,
-        marginBottom: 10,
-        color: 'black',
-    },
-    classText: {
-        fontSize: 16,
-        marginBottom: 5,
-        color: 'black',
-    },
-    markText: {
-        fontSize: 16,
-        marginBottom: 5,
-        color: 'black',
-    },
-    feeText: {
-        fontSize: 16,
-        marginBottom: 5,
-        color: 'black',
-    },
-    syllabusText: {
-        fontSize: 16,
-        marginBottom: 5,
-        color: 'black',
-    },
-    image: {
-        width: 200,
-        height: 200,
-        marginBottom: 10,
-    },
-    button: {
-        width: 100,
-        height: 100,
-        display: 'flex',
-        marginBottom: 30,
-    },
-    buttonRow: {
+    classContainer: {
         flexDirection: 'row',
-    },
-    smimage: {
-        width: 80,
-        height: 80,
+        alignItems: 'center',
         marginBottom: 10,
-        alignSelf: 'center',
+        padding: 10,
+        backgroundColor: '#f0f0f0',
+        borderRadius: 8,
     },
-    bntText: {
-        fontSize: 16,
+    className: {
+        fontSize: 18,
         fontWeight: 'bold',
         color: 'black',
-        alignSelf: 'center',
-    }
+    },
 });
 
 export default AdminSyllabus;

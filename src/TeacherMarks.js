@@ -1,3 +1,5 @@
+// TeacherMarks.js
+
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Alert, TextInput, ScrollView } from 'react-native';
 import Background from './Background';
@@ -6,258 +8,141 @@ import firestore from '@react-native-firebase/firestore';
 import Field from './Field';
 
 const TeacherMarks = (props) => {
-    const fetchStudentClassByRegNo = async (regNo) => {
+    const fetchMarks = async (registrationNumber, term) => {
         try {
-            console.log(`Fetching student with registration number: ${regNo}`);
-            const querySnapshot = await firestore().collection('students').where('registrationNumber', '==', regNo).get();
-
-            if (querySnapshot.empty) {
-                console.log('No student found with this registration number.');
-                throw new Error('No student found with this registration number.');
-            }
-
-            const studentDoc = querySnapshot.docs[0];
-            const studentData = studentDoc.data();
-            const studentId = studentDoc.id; // Get the student document ID
-
-            return { studentData, studentId };
-        } catch (error) {
-            console.error("Error fetching student class:", error);
-            throw error;
-        }
-    };
-
-    const fetchFirstTermMarks = async (studentId) => {
-        try {
-            const marksDoc = await firestore().collection('students').doc(studentId).collection('English').doc('first').get();
+            const marksDoc = await firestore().collection('marks').doc(registrationNumber.toString()).get();
 
             if (!marksDoc.exists) {
-                throw new Error('No marks found for this student.');
+                throw new Error(`No marks found for registration number ${registrationNumber}.`);
             }
 
-            const marksData = marksDoc.data();
+            const marksData = marksDoc.data()[term] || [];
             return marksData;
         } catch (error) {
-            console.error("Error fetching first term marks:", error);
+            console.error(`Error fetching ${term} term marks:`, error);
             throw error;
         }
     };
 
-    const fetchMidTermMarks = async (studentId) => {
+    const updateMarks = async (registrationNumber, term, marks) => {
         try {
-            const marksDoc = await firestore().collection('students').doc(studentId).collection('English').doc('mid').get();
-
-            if (!marksDoc.exists) {
-                throw new Error('No marks found for this student.');
-            }
-
-            const marksData = marksDoc.data();
-            return marksData;
+            await firestore().collection('marks').doc(registrationNumber.toString()).update({ [term]: marks });
+            Alert.alert(`${term} term marks updated successfully!`);
         } catch (error) {
-            console.error("Error fetching mid term marks:", error);
-            throw error;
+            console.error(`Error updating ${term} term marks:`, error);
+            Alert.alert(`Error updating ${term} term marks: `, error.message);
         }
     };
 
-    const fetchFinalTermMarks = async (studentId) => {
+    const deleteMarks = async (registrationNumber, term) => {
         try {
-            const marksDoc = await firestore().collection('students').doc(studentId).collection('English').doc('final').get();
-
-            if (!marksDoc.exists) {
-                throw new Error('No marks found for this student.');
-            }
-
-            const marksData = marksDoc.data();
-            return marksData;
+            await firestore().collection('marks').doc(registrationNumber.toString()).update({ [term]: firestore.FieldValue.delete() });
+            Alert.alert(`${term} term marks deleted successfully!`);
         } catch (error) {
-            console.error("Error fetching final term marks:", error);
-            throw error;
-        }
-    };
-
-    const updateFirstTermMarks = async (studentId, marks) => {
-        try {
-            await firestore().collection('students').doc(studentId).collection('English').doc('first').set({ marks });
-            Alert.alert('First term marks updated successfully!');
-        } catch (error) {
-            console.error("Error updating first term marks:", error);
-            Alert.alert('Error updating first term marks: ', error.message);
-        }
-    };
-
-    const updateMidTermMarks = async (studentId, marks) => {
-        try {
-            await firestore().collection('students').doc(studentId).collection('English').doc('mid').set({ marks });
-            Alert.alert('Mid term marks updated successfully!');
-        } catch (error) {
-            console.error("Error updating mid term marks:", error);
-            Alert.alert('Error updating mid term marks: ', error.message);
-        }
-    };
-
-    const updateFinalTermMarks = async (studentId, marks) => {
-        try {
-            await firestore().collection('students').doc(studentId).collection('English').doc('final').set({ marks });
-            Alert.alert('Final term marks updated successfully!');
-        } catch (error) {
-            console.error("Error updating final term marks:", error);
-            Alert.alert('Error updating final term marks: ', error.message);
-        }
-    };
-
-    const deleteFirstTermMarks = async (studentId) => {
-        try {
-            await firestore().collection('students').doc(studentId).collection('English').doc('first').delete();
-            Alert.alert('First term marks deleted successfully!');
-            setFirstTermMarks('');
-        } catch (error) {
-            console.error("Error deleting first term marks:", error);
-            Alert.alert('Error deleting first term marks: ', error.message);
-        }
-    };
-
-    const deleteMidTermMarks = async (studentId) => {
-        try {
-            await firestore().collection('students').doc(studentId).collection('English').doc('mid').delete();
-            Alert.alert('Mid term marks deleted successfully!');
-            setMidTermMarks('');
-        } catch (error) {
-            console.error("Error deleting mid term marks:", error);
-            Alert.alert('Error deleting mid term marks: ', error.message);
-        }
-    };
-
-    const deleteFinalTermMarks = async (studentId) => {
-        try {
-            await firestore().collection('students').doc(studentId).collection('English').doc('final').delete();
-            Alert.alert('Final term marks deleted successfully!');
-            setFinalTermMarks('');
-        } catch (error) {
-            console.error("Error deleting final term marks:", error);
-            Alert.alert('Error deleting final term marks: ', error.message);
+            console.error(`Error deleting ${term} term marks:`, error);
+            Alert.alert(`Error deleting ${term} term marks: `, error.message);
         }
     };
 
     const [registrationNumber, setRegistrationNumber] = useState('');
-    const [studentInfo, setStudentInfo] = useState(null);
-    const [firstTermMarks, setFirstTermMarks] = useState('');
-    const [midTermMarks, setMidTermMarks] = useState('');
-    const [finalTermMarks, setFinalTermMarks] = useState('');
+    const [firstTermMarks, setFirstTermMarks] = useState([]);
+    const [midTermMarks, setMidTermMarks] = useState([]);
+    const [finalTermMarks, setFinalTermMarks] = useState([]);
 
     const handleLookup = async () => {
         try {
-            const { studentData, studentId } = await fetchStudentClassByRegNo(parseInt(registrationNumber));
-            const firstTermMarksData = await fetchFirstTermMarks(studentId);
-            const midTermMarksData = await fetchMidTermMarks(studentId);
-            const finalTermMarksData = await fetchFinalTermMarks(studentId);
-            setStudentInfo({ ...studentData, studentId });
-            setFirstTermMarks(firstTermMarksData.marks.toString());
-            setMidTermMarks(midTermMarksData.marks.toString());
-            setFinalTermMarks(finalTermMarksData.marks.toString());
+            const firstTermMarksData = await fetchMarks(parseInt(registrationNumber), 'first');
+            const midTermMarksData = await fetchMarks(parseInt(registrationNumber), 'midterm');
+            const finalTermMarksData = await fetchMarks(parseInt(registrationNumber), 'finalterm');
+
+            setFirstTermMarks(firstTermMarksData);
+            setMidTermMarks(midTermMarksData);
+            setFinalTermMarks(finalTermMarksData);
         } catch (error) {
             Alert.alert(error.message);
-            setStudentInfo(null);
-            setFirstTermMarks('');
-            setMidTermMarks('');
-            setFinalTermMarks('');
+            setFirstTermMarks([]);
+            setMidTermMarks([]);
+            setFinalTermMarks([]);
         }
     };
 
-    const handleUpdateFirstTermMarks = async () => {
-        const newMarks = parseInt(firstTermMarks);
-        if (isNaN(newMarks) || newMarks > 50 || newMarks < 0) {
-            Alert.alert('Marks should be a number between 0 and 50');
-            return;
+    const handleUpdateMarks = async (term) => {
+        let marks;
+        switch (term) {
+            case 'first':
+                marks = firstMarks;
+                break;
+            case 'mid':
+                marks = midTermMarks;
+                break;
+            case 'final':
+                marks = finalTermMarks;
+                break;
+            default:
+                return;
         }
+
         try {
-            await updateFirstTermMarks(studentInfo.studentId, newMarks);
+            await updateMarks(parseInt(registrationNumber), term, marks);
         } catch (error) {
-            console.error('Error updating first term marks:', error);
+            console.error(`Error updating ${term} term marks:`, error);
         }
     };
 
-    const handleUpdateMidTermMarks = async () => {
-        const newMarks = parseInt(midTermMarks);
-        if (isNaN(newMarks) || newMarks > 50 || newMarks < 0) {
-            Alert.alert('Marks should be a number between 0 and 50');
-            return;
-        }
-        try {
-            await updateMidTermMarks(studentInfo.studentId, newMarks);
-        } catch (error) {
-            console.error('Error updating mid term marks:', error);
-        }
-    };
-
-    const handleUpdateFinalTermMarks = async () => {
-        const newMarks = parseInt(finalTermMarks);
-        if (isNaN(newMarks) || newMarks > 100 || newMarks < 0) {
-            Alert.alert('Marks should be a number between 0 and 50');
-            return;
-        }
-        try {
-            await updateFinalTermMarks(studentInfo.studentId, newMarks);
-        } catch (error) {
-            console.error('Error updating final term marks:', error);
-        }
-    };
-
-    const handleMarksChange = (text, field) => {
+    const handleMarksChange = (text, index, term) => {
         const newMarks = parseInt(text);
-        if (!isNaN(newMarks) && newMarks <= 50) {
-            switch (field) {
+        if (!isNaN(newMarks) && newMarks <= 100) {
+            let updatedMarks;
+            switch (term) {
                 case 'first':
-                    setFirstTermMarks(text);
+                    updatedMarks = [...firstTermMarks];
+                    updatedMarks[index] = text;
+                    setFirstTermMarks(updatedMarks);
                     break;
                 case 'mid':
-                    setMidTermMarks(text);
+                    updatedMarks = [...midTermMarks];
+                    updatedMarks[index] = text;
+                    setMidTermMarks(updatedMarks);
                     break;
                 case 'final':
-                    setFinalTermMarks(text);
+                    updatedMarks = [...finalTermMarks];
+                    updatedMarks[index] = text;
+                    setFinalTermMarks(updatedMarks);
                     break;
                 default:
                     break;
             }
         } else if (text === '') {
-            switch (field) {
+            let updatedMarks;
+            switch (term) {
                 case 'first':
-                    setFirstTermMarks('');
+                    updatedMarks = [...firstTermMarks];
+                    updatedMarks[index] = '';
+                    setFirstTermMarks(updatedMarks);
                     break;
                 case 'mid':
-                    setMidTermMarks('');
+                    updatedMarks = [...midTermMarks];
+                    updatedMarks[index] = '';
+                    setMidTermMarks(updatedMarks);
                     break;
                 case 'final':
-                    setFinalTermMarks('');
+                    updatedMarks = [...finalTermMarks];
+                    updatedMarks[index] = '';
+                    setFinalTermMarks(updatedMarks);
                     break;
                 default:
                     break;
             }
         } else {
-            Alert.alert('Marks cannot be greater than 50');
+            Alert.alert('Marks cannot be greater than 100');
         }
     };
 
-    const handleDeleteFirstTermMarks = async () => {
+    const handleDeleteMarks = async (term) => {
         try {
-            await deleteFirstTermMarks(studentInfo.studentId);
+            await deleteMarks(parseInt(registrationNumber), term);
         } catch (error) {
-            console.error('Error deleting first term marks:', error);
-        }
-    };
-
-    const handleDeleteMidTermMarks = async () => {
-        try {
-            await deleteMidTermMarks(studentInfo.studentId);
-        } catch (error) {
-            console.error('Error deleting mid term marks:', error);
-        }
-    };
-
-    const handleDeleteFinalTermMarks = async () => {
-        try {
-            await deleteFinalTermMarks(studentInfo.studentId);
-        } catch (error) {
-            console.error('Error deleting final term marks:', error);
+            console.error(`Error deleting ${term} term marks:`, error);
         }
     };
 
@@ -273,100 +158,116 @@ const TeacherMarks = (props) => {
                         onChangeText={setRegistrationNumber}
                     />
                     <Btn pad={12} bgColor='black' textColor='white' btnText='Lookup' Press={handleLookup} />
-                    {studentInfo && (
+                    {firstTermMarks.length > 0 && (
                         <View style={styles.resultContainer}>
-                            <Text style={styles.resultText}>Student Name: {studentInfo.name}</Text>
-                            <Text style={styles.resultText}>Current Class: {studentInfo.class}</Text>
                             <Text style={styles.resultText}>First Term Marks: </Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="First Term Marks"
-                                keyboardType="numeric"
-                                value={firstTermMarks}
-                                onChangeText={(text) => handleMarksChange(text, 'first')}
-                            />
+                            {firstTermMarks.map((mark, index) => (
+                                <View key={index}>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder={`Subject ${index + 1}`}
+                                        keyboardType="numeric"
+                                        value={mark}
+                                        onChangeText={(text) => handleMarksChange(text, index, 'first')}
+                                    />
+                                </View>
+                            ))}
                             <View style={styles.buttonContainer}>
-                                <Btn pad={12} bgColor='green' textColor='white' btnText='Update' Press={handleUpdateFirstTermMarks} />
-                                <Btn pad={12} bgColor='red' textColor='white' btnText='Delete' Press={handleDeleteFirstTermMarks} />
-                            </View>
-
-                            <Text style={styles.resultText}>Mid Term Marks: </Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Mid Term Marks"
-                                keyboardType="numeric"
-                                value={midTermMarks}
-                                onChangeText={(text) => handleMarksChange(text, 'mid')}
-                            />
-                            <View style={styles.buttonContainer}>
-                                <Btn pad={12} bgColor='green' textColor='white' btnText='Update' Press={handleUpdateMidTermMarks} />
-                                <Btn pad={12} bgColor='red' textColor='white' btnText='Delete' Press={handleDeleteMidTermMarks} />
-                            </View>
-
-                            <Text style={styles.resultText}>Final Term Marks: </Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Final Term Marks"
-                                keyboardType="numeric"
-                                value={finalTermMarks}
-                                onChangeText={(text) => handleMarksChange(text, 'final')}
-                            />
-                            <View style={styles.buttonContainer}>
-                                <Btn pad={12} bgColor='green' textColor='white' btnText='Update' Press={handleUpdateFinalTermMarks} />
-                                <Btn pad={12} bgColor='red' textColor='white' btnText='Delete' Press={handleDeleteFinalTermMarks} />
+                                <Btn pad={12} bgColor='green' textColor='white' btnText='Update' Press={() => handleUpdateMarks('first')} />
+                                <Btn pad={12} bgColor='red' textColor='white' btnText='Delete' Press={() => handleDeleteMarks('first')} />
                             </View>
                         </View>
                     )}
-                </View>
-            </ScrollView>
-        </Background>
-    );
+                    {midTermMarks.length > 0 && (
+                        <View style={styles.resultContainer}>
+                            <Text style={styles.resultText}>Mid Term Marks: </Text>
+                            {midTermMarks.map((mark, index) => (
+                                <View key={index}>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder={`Subject ${index + 1}`}
+                                        keyboardType="numeric"
+                                        value={mark}
+                                        onChangeText={(text) => handleMarksChange(text, index, 'mid')}
+                                    />
+                                </View>
+                            ))}
+                            <View style={styles.buttonContainer}>
+                                <Btn pad={12} bgColor='green' textColor='white' btnText='Update' Press={() => handleUpdateMarks('mid')} />
+                                <Btn pad={12} bgColor='red' textColor='white' btnText='Delete' Press={() => handleDeleteMarks('mid')} />
+</View>
+</View>
+)}
+{finalTermMarks.length > 0 && (
+<View style={styles.resultContainer}>
+<Text style={styles.resultText}>Final Term Marks: </Text>
+{finalTermMarks.map((mark, index) => (
+<View key={index}>
+<TextInput
+style={styles.input}
+placeholder={'Subject ${index + 1}'}
+keyboardType="numeric"
+value={mark}
+onChangeText={(text) => handleMarksChange(text, index, 'final')}
+/>
+</View>
+))}
+<View style={styles.buttonContainer}>
+<Btn pad={12} bgColor='green' textColor='white' btnText='Update' Press={() => handleUpdateMarks('final')} />
+<Btn pad={12} bgColor='red' textColor='white' btnText='Delete' Press={() => handleDeleteMarks('final')} />
+</View>
+</View>
+)}
+</View>
+</ScrollView>
+</Background>
+);
 };
 
 const styles = StyleSheet.create({
-    scrollViewContainer: {
-        flexGrow: 1,
-    },
-    container: {
-        padding: 20,
-        flexGrow: 1,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        color: 'black',
-        textAlign: 'center',
-    },
-    resultContainer: {
-        marginTop: 20,
-        alignItems: 'center',
-        fontWeight: 'bold',
-    },
-    resultText: {
-        fontSize: 18,
-        marginBottom: 10,
-        color: 'black',
-        fontWeight: 'bold',
-        alignSelf: 'flex-start',
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: 'gray',
-        padding: 10,
-        borderRadius: 5,
-        marginBottom: 10,
-        width: '80%',
-        textAlign: 'center',
-        color: 'black',
-        fontWeight: 'bold',
-    },
-    buttonContainer: {
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        width: '40%',
-        marginBottom: 10,
-    },
+scrollViewContainer: {
+flexGrow: 1,
+},
+container: {
+padding: 20,
+flexGrow: 1,
+},
+title: {
+fontSize: 24,
+fontWeight: 'bold',
+marginBottom: 20,
+color: 'black',
+textAlign: 'center',
+},
+resultContainer: {
+marginTop: 20,
+alignItems: 'center',
+fontWeight: 'bold',
+},
+resultText: {
+fontSize: 18,
+marginBottom: 10,
+color: 'black',
+fontWeight: 'bold',
+alignSelf: 'flex-start',
+},
+input: {
+borderWidth: 1,
+borderColor: 'gray',
+padding: 10,
+borderRadius: 5,
+marginBottom: 10,
+width: '80%',
+textAlign: 'center',
+color: 'black',
+fontWeight: 'bold',
+},
+buttonContainer: {
+flexDirection: 'column',
+justifyContent: 'space-between',
+width: '40%',
+marginBottom: 10,
+},
 });
 
 export default TeacherMarks;
