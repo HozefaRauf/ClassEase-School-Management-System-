@@ -1,40 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Alert } from 'react-native';
 import Background from './Background';
 import Btn from './Btn';
+import DocumentPicker from 'react-native-document-picker';
+import storage from '@react-native-firebase/storage';
 
-const AdminSyllabus = ({ navigation,props }) => {
-    const [feeStatus, setFeeStatus] = useState({
-        registrationNumber: '',
-        studentName: '',
-        amountDue: '',
-        amountPaid: '',
-        payableAmount: '',
-        paymentDate: '',
-        lateFees: false,
-        remarks: '',
-    });
-
-    const [reports, setReports] = useState([]);
-    const [timetable, setTimetable] = useState(null);
-    const [syllabus, setSyllabus] = useState([]);
+const AdminSyllabus = ({ navigation }) => {
     const classes = ['Nursery', 'Prep', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8'];
 
-    useEffect(() => {
-        // Fetch initial data
-        //fetchReports(); // Uncomment if reports are to be fetched initially
-    }, []);
-    
-    const handleUploadSyllabus = (className) => {
-        // Handle uploading syllabus for a specific class
+    const handleUploadSyllabus = async (className) => {
+        try {
+            const result = await DocumentPicker.pick({
+                type: [DocumentPicker.types.allFiles],
+            });
+
+            const fileUri = result[0].uri; // Ensure that the URI is correctly extracted from the result
+            const fileName = 'eigth.jpg'; // Rename file to eigth.jpg
+
+            // Upload file to Firebase Storage
+            const reference = storage().ref(`syllabus/${className}/${fileName}`);
+            const task = reference.putFile(fileUri);
+
+            task.on('state_changed', taskSnapshot => {
+                console.log(`${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`);
+            });
+
+            task.then(() => {
+                Alert.alert('Upload successful', `Syllabus for ${className} uploaded successfully.`);
+            });
+        } catch (err) {
+            if (DocumentPicker.isCancel(err)) {
+                console.log('User cancelled the document picker');
+            } else {
+                console.error("Error uploading file:", err);
+                Alert.alert('Upload failed', 'An error occurred while uploading the syllabus.');
+            }
+        }
     };
 
     return (
         <Background>
             <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.section}>
-                <Text style={styles.title}>Syllabus Management</Text>
-                                      
+                    <Text style={styles.title}>Syllabus Management</Text>
                     <Text style={styles.subtitle}>Syllabus Management</Text>
                     {classes.map((className, index) => (
                         <View key={index}>
@@ -43,7 +51,6 @@ const AdminSyllabus = ({ navigation,props }) => {
                             {/* Render syllabus for the specific class here */}
                         </View>
                     ))}
-                    {/* Render uploaded syllabus */}
                 </View>
             </ScrollView>
         </Background>
@@ -73,38 +80,10 @@ const styles = StyleSheet.create({
         color: 'black',
         paddingTop: 20,
     },
-    input: {
-        borderWidth: 1,
-        borderColor: 'gray',
-        padding: 10,
-        borderRadius: 5,
-        marginBottom: 10,
-        color: 'black',
-    },
     classText: {
         fontSize: 16,
         marginBottom: 5,
         color: 'black',
-    },
-    markText: {
-        fontSize: 16,
-        marginBottom: 5,
-        color: 'black',
-    },
-    feeText: {
-        fontSize: 16,
-        marginBottom: 5,
-        color: 'black',
-    },
-    syllabusText: {
-        fontSize: 16,
-        marginBottom: 5,
-        color: 'black',
-    },
-    image: {
-        width: 200,
-        height: 200,
-        marginBottom: 10,
     },
     button: {
         width: 100,
@@ -115,18 +94,6 @@ const styles = StyleSheet.create({
     buttonRow: {
         flexDirection: 'row',
     },
-    smimage: {
-        width: 80,
-        height: 80,
-        marginBottom: 10,
-        alignSelf: 'center',
-    },
-    bntText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: 'black',
-        alignSelf: 'center',
-    }
 });
 
 export default AdminSyllabus;

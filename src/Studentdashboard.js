@@ -1,66 +1,98 @@
-import React from 'react';
-import { StyleSheet, View, Text, Image, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, Image, ScrollView, Alert } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 import Background from './Background';
 import Btn from './Btn';
 import StudentFees from './StudentFees';
-import StudentSyllabus from './StudentSyllabus';
 
 const Dashboard = ({ navigation, route }) => {
     const { email, password, classes } = route.params || {};
+    const [timetableUrl, setTimetableUrl] = useState(null);
+    const [syllabusUrl, setSyllabusUrl] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // Function to get the image source based on the class
-    const getTimetableImage = (classes) => {
-        switch (classes) {
-            case 'nursery':
-                return require('./assets/timetable/nursery.jpeg');
-            case 'prep':
-                return require('./assets/timetable/prep.jpeg');
-            case 'first':
-                return require('./assets/timetable/first.jpeg');
-            case 'second':
-                return require('./assets/timetable/second.jpeg');
-            case 'third':
-                return require('./assets/timetable/third.jpeg');
-            case 'fourth':
-                return require('./assets/timetable/fourth.jpeg');
-            case 'fifth':
-                return require('./assets/timetable/fifth.jpeg');
-            case 'sixth':
-                return require('./assets/timetable/sixth.jpeg');
-            case 'seventh':
-                return require('./assets/timetable/seventh.jpeg');  
-            case 'eighth':
-                return require('./assets/timetable/eigth.jpeg');                          
-            default:
-                return require('./assets/timetable/first.jpeg'); //  if class is not matched
-        }
-    };
-    const getSyllabusImage = (classes) => {
-        switch (classes) {
-            case 'nursery':
-                return require('./assets/syllabus/nursery.jpg');
-            case 'prep':
-                return require('./assets/syllabus/prep.jpg');
-            case 'first':
-                return require('./assets/syllabus/first.jpg');
-            case 'second':
-                return require('./assets/syllabus/second.jpg');
-            case 'third':
-                return require('./assets/syllabus/third.jpg');
-            case 'fourth':
-                return require('./assets/syllabus/fourth.jpg');
-            case 'fifth':
-                return require('./assets/syllabus/fifth.jpg');
-            case 'sixth':
-                return require('./assets/syllabus/sixth.jpg');
-            case 'seventh':
-                return require('./assets/syllabus/seventh.jpg');  
-            case 'eighth':
-                return require('./assets/syllabus/eigth.jpg');                          
-            default:
-                return require('./assets/syllabus/first.jpg'); //  if class is not matched
-        }
-    };
+    useEffect(() => {
+        const fetchTimetable = async () => {
+            try {
+                // Fetch the student document from Firestore based on email and password
+                const studentRef = firestore().collection('students').where('email', '==', email).where('password', '==', password);
+                const snapshot = await studentRef.get();
+                if (snapshot.empty) {
+                    setError('Student not found');
+                    return;
+                }
+    
+                // Assuming there's only one student document matching the email and password
+                const studentDoc = snapshot.docs[0];
+                const studentData = studentDoc.data();
+                
+                // Access the class reference from student data
+                const studentClassRef = studentData.class;
+    
+                // Fetch the class document from Firestore using the reference
+                const classDocSnapshot = await studentClassRef.get();
+    
+                if (classDocSnapshot.exists) {
+                    // Retrieve the class name from the class document
+                    const className = classDocSnapshot.data().name;
+                    const timetableFileName = 'eigth.jpg'; // Assuming the timetable filename is constant
+                    const reference = storage().ref(`Timetable/${className}/${timetableFileName}`);
+                    const url = await reference.getDownloadURL();
+                    setTimetableUrl(url);
+                } else {
+                    setError('Class information not found for this student');
+                }
+            } catch (err) {
+                console.error("Error fetching timetable:", err);
+                setError('Error fetching timetable');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const fetchSyllabus = async () => {
+            try {
+                // Fetch the student document from Firestore based on email and password
+                const studentRef = firestore().collection('students').where('email', '==', email).where('password', '==', password);
+                const snapshot = await studentRef.get();
+                if (snapshot.empty) {
+                    setError('Student not found');
+                    return;
+                }
+    
+                // Assuming there's only one student document matching the email and password
+                const studentDoc = snapshot.docs[0];
+                const studentData = studentDoc.data();
+                
+                // Access the class reference from student data
+                const studentClassRef = studentData.class;
+    
+                // Fetch the class document from Firestore using the reference
+                const classDocSnapshot = await studentClassRef.get();
+    
+                if (classDocSnapshot.exists) {
+                    // Retrieve the class name from the class document
+                    const className = classDocSnapshot.data().name;
+                    const syllabusFileName = 'eigth.jpg'; // Assuming the syllabus filename is constant
+                    const reference = storage().ref(`syllabus/${className}/${syllabusFileName}`);
+                    const url = await reference.getDownloadURL();
+                    setSyllabusUrl(url);
+                } else {
+                    setError('Class information not found for this student');
+                }
+            } catch (err) {
+                console.error("Error fetching syllabus:", err);
+                setError('Error fetching syllabus');
+            } finally {
+                setLoading(false);
+            }
+        };
+    
+        fetchTimetable();
+        fetchSyllabus();
+    }, [email, password]);
 
     return (
         <Background>
@@ -74,13 +106,32 @@ const Dashboard = ({ navigation, route }) => {
                         <StudentFees email={email} password={password} />
                         <Text style={styles.subtitle}>Timetable</Text>
                         <View style={styles.container1234}>
-                            <Image source={getTimetableImage(classes)} style={styles.pic1234} />
-                         </View>
+                            {loading ? (
+                                <Text>Loading...</Text>
+                            ) : error ? (
+                                <Text>{error}</Text>
+                            ) : (
+                                timetableUrl ? (
+                                    <Image source={{ uri: timetableUrl }} style={styles.pic1234} />
+                                ) : (
+                                    <Text>No timetable found.</Text>
+                                )
+                            )}
+                        </View>
                         <Text style={styles.subtitle}>Syllabus</Text>
                         <View style={styles.container1234}>
-                            <Image source={getSyllabusImage(classes)} style={styles.pic1234} />
-                         </View>
-                        
+                            {loading ? (
+                                <Text>Loading...</Text>
+                            ) : error ? (
+                                <Text>{error}</Text>
+                            ) : (
+                                syllabusUrl ? (
+                                    <Image source={{ uri: syllabusUrl }} style={styles.pic1234} />
+                                ) : (
+                                    <Text>No syllabus found.</Text>
+                                )
+                            )}
+                        </View>
                     </View>
                 </ScrollView>
                 <View style={styles.logoutButton}>
@@ -136,3 +187,5 @@ const styles = StyleSheet.create({
 });
 
 export default Dashboard;
+
+                       
