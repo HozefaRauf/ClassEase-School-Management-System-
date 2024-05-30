@@ -40,7 +40,7 @@ function App() {
         <Stack.Screen name="Practice" component={Practice} />
         <Stack.Screen name="StudentDashboard" component={dashboard} />
         <Stack.Screen name="AdminDashboard" component={AdminPortal} />
-        <Stack.Screen name="StudentCRUD" component={StudentCURD} />
+        <Stack.Screen name="StudentCURD" component={StudentCURD} />
         <Stack.Screen name="AddStudent" component={AddStudent} />
         <Stack.Screen name="StudentDetail" component={StudentDetail} />
         <Stack.Screen name="TeacherDashboard" component={TeacherDashboard} />
