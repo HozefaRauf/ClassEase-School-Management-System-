@@ -22,8 +22,8 @@ import AdminReport from './src/AdminReport.js';
 import AdminTimetable from './src/AdminTimetable.js';
 import TeacherMarks from './src/TeacherMarks.js';
 import ClassLookup from './src/ClassLookup.js';
-import AddStudent from './src/AddStudent.js';
-import StudentDetail from './src/StudentDetail.js';
+import StudentFees from './src/StudentFees.js';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -50,6 +50,8 @@ function App() {
         <Stack.Screen name="AdminTimetable" component={AdminTimetable} />
         <Stack.Screen name="TeacherMarks" component={TeacherMarks} />
         <Stack.Screen name="ClassLookup" component={ClassLookup} />
+        <Stack.Screen name="StudentFees" component={StudentFees} />
+        <Stack.Screen name="StudentCRUD" component={StudentCRUD} />
 
       </Stack.Navigator>
     </NavigationContainer>

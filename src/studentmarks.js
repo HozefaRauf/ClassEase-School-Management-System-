@@ -1,100 +1,107 @@
-import { ScrollView,
-    View, 
-    Text,
-    StyleSheet
-
- } from "react-native"
- import React from 'react';
- import Btn from './Btn';
- import Background from './Background';
-
- import { TextInput, DataTable } from "react-native-paper";
-
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, Alert, ScrollView } from 'react-native';
+import Background from './Background';
+import firestore from '@react-native-firebase/firestore';
 
 const StudentMarks = (props) => {
+    const { email, password } = props;
+    const [marksInfo, setMarksInfo] = useState(null);
 
+    useEffect(() => {
+        const fetchStudentMarks = async () => {
+            try {
+                const usersRef = firestore().collection('students');
+                const querySnapshot = await usersRef.where('email', '==', email).where('password', '==', password).get();
 
-    return(
+                if (querySnapshot.empty) {
+                    throw new Error('No user found with this email and password.');
+                }
+
+                const userDoc = querySnapshot.docs[0];
+                const studentId = userDoc.id;
+
+                const marksRef = firestore().collection('students').doc(studentId).collection('English');
+                const marksData = {};
+
+                // Fetch marks for first term
+                const firstTermDoc = await marksRef.doc('first').get();
+                if (firstTermDoc.exists) {
+                    marksData.firstTerm = firstTermDoc.data();
+                }
+
+                // Fetch marks for mid term
+                const midTermDoc = await marksRef.doc('mid').get();
+                if (midTermDoc.exists) {
+                    marksData.midTerm = midTermDoc.data();
+                }
+
+                // Fetch marks for final term
+                const finalTermDoc = await marksRef.doc('final').get();
+                if (finalTermDoc.exists) {
+                    marksData.finalTerm = finalTermDoc.data();
+                }
+
+                setMarksInfo(marksData);
+            } catch (error) {
+                Alert.alert(error.message);
+                setMarksInfo(null);
+            }
+        };
+
+        fetchStudentMarks();
+    }, [email, password]);
+
+    return (
         <Background>
-        <View style={styles.container}>
-                <DataTable style = {styles.table}>
-                    <DataTable.Header style={styles.head}>
-                        <DataTable.Title style = {{flex: 4}}> <Text style = {styles.tableTitle}> Subject </Text></DataTable.Title>
-                        <DataTable.Title><Text style = {styles.tableTitle}>First</Text></DataTable.Title>
-                        <DataTable.Title><Text style = {styles.tableTitle}>Mids</Text></DataTable.Title>
-                        <DataTable.Title><Text style = {styles.tableTitle}>Finals</Text></DataTable.Title>
-                        
-                    </DataTable.Header>
-
-                    <DataTable.Row style= {styles.row}>
-                        <DataTable.Cell style = {{flex: 4}}> <Text style = {styles.subjTitle}>Mobile Application Dev</Text></DataTable.Cell>
-                        <DataTable.Cell><Text style = {styles.data}>18</Text></DataTable.Cell>
-                        <DataTable.Cell><Text style = {styles.data}>20</Text></DataTable.Cell>
-                        <DataTable.Cell><Text style = {styles.data}>45</Text></DataTable.Cell>
-                    </DataTable.Row> 
-                    <DataTable.Row style= {styles.row}>
-                        <DataTable.Cell style = {{flex: 4}}> <Text style = {styles.subjTitle}>Mobile Application Dev</Text></DataTable.Cell>
-                        <DataTable.Cell><Text style = {styles.data}>18</Text></DataTable.Cell>
-                        <DataTable.Cell><Text style = {styles.data}>20</Text></DataTable.Cell>
-                        <DataTable.Cell><Text style = {styles.data}>45</Text></DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row style= {styles.row}>
-                        <DataTable.Cell style = {{flex: 4}}> <Text style = {styles.subjTitle}>Mobile Application Dev</Text></DataTable.Cell>
-                        <DataTable.Cell><Text style = {styles.data}>18</Text></DataTable.Cell>
-                        <DataTable.Cell><Text style = {styles.data}>20</Text></DataTable.Cell>
-                        <DataTable.Cell><Text style = {styles.data}>45</Text></DataTable.Cell>
-                    </DataTable.Row>
-
-                    
-                </DataTable>
-                <Btn pad={12} bgColor='green' textColor='white' btnText='Back' Press={() =>props.navigation.navigate("StudentDashboard")}/>
-            </View>
-            </Background>
-        
+            <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+                <View style={styles.container}>
+                    {marksInfo && (
+                        <View style={styles.resultContainer}>
+                            <Text style={styles.title}>Marks</Text>
+                            <Text style={styles.subtitle}>First Term:</Text>
+                            <Text style={styles.markText}>Marks: {marksInfo.firstTerm ? marksInfo.firstTerm.marks : 'N/A'}</Text>
+                            <Text style={styles.subtitle}>Mid Term:</Text>
+                            <Text style={styles.markText}>Marks: {marksInfo.midTerm ? marksInfo.midTerm.marks : 'N/A'}</Text>
+                            <Text style={styles.subtitle}>Final Term:</Text>
+                            <Text style={styles.markText}>Marks: {marksInfo.finalTerm ? marksInfo.finalTerm.marks : 'N/A'}</Text>
+                        </View>
+                    )}
+                </View>
+            </ScrollView>
+        </Background>
     );
-}
+};
 
 const styles = StyleSheet.create({
-    head:{
-        backgroundColor: "#8349EA",
-        borderRadius : 20
+    scrollViewContainer: {
+        flexGrow: 1,
     },
-
-    table:{
-        paddingVertical: 40,
-        width: 320,
-        alignSelf: 'center'
-
+    container: {
+        padding: 20,
+        flexGrow: 1,
     },
-
-    tableTitle: {
-        fontSize: 14,
-        fontFamily: 'Poppins-Medium',
-        color: '#000000',
-        alignSelf: 'center'
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        color: 'black',
+        textAlign: 'center',
     },
-
-
-
-    row: {
-        height: 40,
-        backgroundColor: 'lavender',
-        borderRadius : 10,
-        width: 310,
-        alignSelf: 'center',
-        marginTop: 2
+    resultContainer: {
+        marginTop: 20,
+        alignItems: 'center',
     },
-
-    subjTitle:{
-        fontFamily: 'Poppins-SemiBold',
-        fontSize: 12
+    subtitle: {
+        fontWeight: 'bold',
+        fontSize: 18,
+        marginBottom: 10,
+        color: 'black',
     },
-
-    data:{
-        color: "#000000",
-        fontFamily: 'Poppins-Regular',
-        fontSize: 12
-    }
-})
+    markText: {
+        fontSize: 16,
+        marginBottom: 5,
+        color: 'black',
+    },
+});
 
 export default StudentMarks;
