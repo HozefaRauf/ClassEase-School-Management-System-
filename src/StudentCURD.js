@@ -3,7 +3,8 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList, Dimensio
 import firestore from '@react-native-firebase/firestore';
 import Background from './Background';
 
-const StudentCRUD = ({ navigation,props }) => {
+const StudentCURD = ({ navigation,props }) => {
+    const [list, setList] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [students, setStudents] = useState([]);
     const [filteredStudents, setFilteredStudents] = useState([]);
