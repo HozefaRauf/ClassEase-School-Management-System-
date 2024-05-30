@@ -15,6 +15,8 @@ import AdminPortal from './src/adminDashboard';
 import TeacherDashboard from './src/TeacherDashboard';
 import StudentCURD from './src/StudentCURD.js';
 import StudentMarks from './src/studentmarks.js';
+import StudentCURD from './src/StudentCURD.js';
+import StudentMarks from './src/studentmarks.js';
 import StudentTimetable from './src/StudentTimetable.js';
 import AdminSyllabus from './src/AdminSyllabus.js';
 import AdminFee from './src/AdminFee.js';
@@ -41,6 +43,9 @@ function App() {
         <Stack.Screen name="StudentDashboard" component={dashboard} />
         <Stack.Screen name="AdminDashboard" component={AdminPortal} />
         <Stack.Screen name="StudentCURD" component={StudentCURD} />
+        <Stack.Screen name="AddStudent" component={AddStudent} />
+        <Stack.Screen name="StudentDetail" component={StudentDetail} />
+        <Stack.Screen name="StudentCRUD" component={StudentCURD} />
         <Stack.Screen name="AddStudent" component={AddStudent} />
         <Stack.Screen name="StudentDetail" component={StudentDetail} />
         <Stack.Screen name="TeacherDashboard" component={TeacherDashboard} />
