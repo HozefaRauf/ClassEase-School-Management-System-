@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList, Dimensions} from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Background from './Background';
 
-const StudentCURD = ({ navigation,props }) => {
+const StudentCURD = ({ navigation }) => {
     const [list, setList] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [students, setStudents] = useState([]);
@@ -13,33 +13,43 @@ const StudentCURD = ({ navigation,props }) => {
         getData();
     }, []);
 
-    const getData= async()=>{
+    const getData = async () => {
         try {
-            firestore().collection('students').onSnapshot((snap)=>{
-                const tempArray=[];
-                snap.forEach(item=>{
+            firestore().collection('students').onSnapshot((snap) => {
+                const tempArray = [];
+                snap.forEach(item => {
                     tempArray.push(item.data());
-                })
+                });
                 setList(tempArray);
                 setStudents(tempArray);
                 setFilteredStudents(tempArray);
-            })
+            });
         } catch (error) {
-            
+            console.error("Error fetching student data: ", error);
         }
-    }
+    };
 
     const handleSearch = (query) => {
         setSearchQuery(query);
         if (query) {
-            const filtered = students.filter(student => 
-                student.registration_number && 
+            const filtered = students.filter(student =>
+                student.registration_number &&
                 student.registration_number.toString().includes(query)
             );
             setFilteredStudents(filtered);
         } else {
             setFilteredStudents(students);
         }
+    };
+
+    const handleStudentPress = (student) => {
+        const preparedStudent = {
+            ...student,
+            dob: student.dob ? student.dob.toDate().toISOString() : '',
+            date_of_admission: student.date_of_admission ? student.date_of_admission.toDate().toISOString() : '',
+            classId: student.class.id,
+        };
+        navigation.navigate('StudentDetail', { student: preparedStudent });
     };
 
     return (
@@ -58,9 +68,9 @@ const StudentCURD = ({ navigation,props }) => {
                         <Text style={styles.addButtonText}>+</Text>
                     </TouchableOpacity>
                 </View>
-              
+
                 <View style={styles.cardContainer}>
-                    <Text style={{ marginVertical: 20, fontSize: 20, fontWeight: 'bold', color:'black'}}>
+                    <Text style={{ marginVertical: 20, fontSize: 20, fontWeight: 'bold', color: 'black' }}>
                         All Students:
                     </Text>
 
@@ -69,14 +79,14 @@ const StudentCURD = ({ navigation,props }) => {
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 style={styles.card}
-                                onPress={() => navigation.navigate('StudentDetail', { student: item })}
+                                onPress={() => handleStudentPress(item)}
                             >
                                 <Text>{item.registration_number}. {item.name}</Text>
                             </TouchableOpacity>
                         )}
                         keyExtractor={(item, index) => index.toString()}
                     />
-                    </View>
+                </View>
             </View>
         </Background>
     );
@@ -88,22 +98,20 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        
         alignItems: 'center',
     },
-    stu:{
+    stu: {
         color: 'black',
         fontSize: 45,
         fontWeight: 'bold',
-        alignSelf:'center',
+        alignSelf: 'center',
     },
     searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: -5,
-        gap:5,
-        marginTop:40,
-        
+        gap: 5,
+        marginTop: 40,
     },
     addButton: {
         backgroundColor: 'green',
@@ -119,7 +127,6 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 24,
         fontWeight: 'bold',
-
     },
     searchInput: {
         flex: 1,
@@ -130,7 +137,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         color: 'black',
         borderWidth: 2,
-        
     },
     studentItem: {
         padding: 16,
@@ -140,20 +146,16 @@ const styles = StyleSheet.create({
     studentText: {
         fontSize: 16,
     },
-
     cardContainer: {
-        
         marginTop: 50,
-      },
-      card: {
+    },
+    card: {
         backgroundColor: '#4F7942',
         width: width - 40,
         padding: 20,
         borderRadius: 10,
         marginVertical: 10,
-      },
+    },
 });
 
 export default StudentCURD;
-
-
