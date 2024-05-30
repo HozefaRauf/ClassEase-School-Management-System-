@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, ScrollView, Alert } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Alert, TouchableOpacity } from 'react-native';
 import Background from './Background';
-import Btn from './Btn';
 import DocumentPicker from 'react-native-document-picker';
 import storage from '@react-native-firebase/storage';
 
@@ -14,10 +13,9 @@ const AdminSyllabus = ({ navigation }) => {
                 type: [DocumentPicker.types.allFiles],
             });
 
-            const fileUri = result[0].uri; // Ensure that the URI is correctly extracted from the result
-            const fileName = 'eigth.jpg'; // Rename file to eigth.jpg
+            const fileUri = result[0].uri;
+            const fileName = 'eigth.jpg'; 
 
-            // Upload file to Firebase Storage
             const reference = storage().ref(`syllabus/${className}/${fileName}`);
             const task = reference.putFile(fileUri);
 
@@ -43,13 +41,13 @@ const AdminSyllabus = ({ navigation }) => {
             <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.section}>
                     <Text style={styles.title}>Syllabus Management</Text>
-                    <Text style={styles.subtitle}>Syllabus Management</Text>
+                    <Text style={styles.subtitle}>Upload Syllabus</Text>
                     {classes.map((className, index) => (
-                        <View key={index}>
-                            <Text style={styles.classText}>{className}</Text>
-                            <Btn pad={12} bgColor='green' textColor='white' btnText='Upload Syllabus' Press={() => handleUploadSyllabus(className)} />
-                            {/* Render syllabus for the specific class here */}
-                        </View>
+                        <TouchableOpacity key={index} onPress={() => handleUploadSyllabus(className)}>
+                            <View style={styles.classContainer}>
+                                <Text style={styles.className}>{className}</Text>
+                            </View>
+                        </TouchableOpacity>
                     ))}
                 </View>
             </ScrollView>
@@ -59,10 +57,13 @@ const AdminSyllabus = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
-        flexGrow: 1, // Ensures the content can grow and scroll if needed
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 20,
     },
     section: {
+        width: '90%',
         marginBottom: 20,
     },
     title: {
@@ -79,20 +80,20 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         color: 'black',
         paddingTop: 20,
+        textAlign: 'center',
     },
-    classText: {
-        fontSize: 16,
-        marginBottom: 5,
-        color: 'black',
-    },
-    button: {
-        width: 100,
-        height: 100,
-        display: 'flex',
-        marginBottom: 30,
-    },
-    buttonRow: {
+    classContainer: {
         flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+        padding: 10,
+        backgroundColor: '#f0f0f0',
+        borderRadius: 8,
+    },
+    className: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: 'black',
     },
 });
 
