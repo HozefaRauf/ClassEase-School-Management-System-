@@ -21,6 +21,8 @@ const StudentCRUD = ({ navigation,props }) => {
                     tempArray.push(item.data());
                 })
                 setList(tempArray);
+                setStudents(tempArray);
+                setFilteredStudents(tempArray);
             })
         } catch (error) {
             
@@ -30,7 +32,10 @@ const StudentCRUD = ({ navigation,props }) => {
     const handleSearch = (query) => {
         setSearchQuery(query);
         if (query) {
-            const filtered = students.filter(student => student.registrationNumber.includes(query));
+            const filtered = students.filter(student => 
+                student.registration_number && 
+                student.registration_number.toString().includes(query)
+            );
             setFilteredStudents(filtered);
         } else {
             setFilteredStudents(students);
@@ -60,23 +65,17 @@ const StudentCRUD = ({ navigation,props }) => {
                     </Text>
 
                     <FlatList
-                        data={list}
-                        renderItem={item => {
-                            const cardIndex = item.index;
-                            if (item.item !== null) {
-                            return (
-                                <TouchableOpacity
+                        data={filteredStudents}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
                                 style={styles.card}
-                                onPress={() => handleCardPress(item.item.id, item.item.text)}
-                                onLongPress={() =>
-                                    handleCardLongPress(item.item.id, item.item.text)
-                                }>
-                                <Text>{item.item.registration_number}.  {item.item.name}</Text>
-                                </TouchableOpacity>
-                            );
-                            }
-                        }}
-                        />
+                                onPress={() => navigation.navigate('StudentDetail', { student: item })}
+                            >
+                                <Text>{item.registration_number}. {item.name}</Text>
+                            </TouchableOpacity>
+                        )}
+                        keyExtractor={(item, index) => index.toString()}
+                    />
                     </View>
             </View>
         </Background>

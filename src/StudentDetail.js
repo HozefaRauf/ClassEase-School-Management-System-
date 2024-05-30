@@ -1,36 +1,42 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, Alert, ScrollView, } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, Alert, ScrollView, TextInput, TouchableOpacity} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { Picker } from '@react-native-picker/picker';
 import Background1 from './Background1';
 import Field from './Field';
 import Btn from './Btn';
 
-const AddStudent = () => {
-    const [regno, setRegno] = useState('');
-    const [name, setName] = useState('');
-    const [dob, setDob] = useState('');
-    const [gender, setGender] = useState('');
-    const [fatherName, setFatherName] = useState('');
-    const [caste, setCaste] = useState('');
-    const [occupation, setOccupation] = useState('');
-    const [residence, setResidence] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [remarks, setRemarks] = useState('');
-    const [dateOfAdmission, setDateOfAdmission] = useState('');
-    const [admissionClass, setAdmissionClass] = useState('');
+const   StudentDetail = ({ route, navigation }) => {
+    // Ensure that route and route.params exist
+    const student = route.params && route.params.student ? route.params.student : null;
 
-    const handleAddData = async () => {
-        if (!regno || !name || !dob || !gender || !fatherName || !caste || !occupation || !residence || !email || !password || !remarks || !dateOfAdmission || !admissionClass) {
-            Alert.alert('Missing Information', 'Please fill out all fields');
-            return;
-        }
+    // If student is not provided, show an error message
+    if (!student) {
+        return (
+            <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>Student data not found</Text>
+            </View>
+        );
+    }
 
+    const [regno, setRegno] = useState(student.registration_number.toString());
+    const [name, setName] = useState(student.name);
+    const [dob, setDob] = useState(student.dob.toDate().toISOString().split('T')[0]);
+    const [gender, setGender] = useState(student.gender);
+    const [fatherName, setFatherName] = useState(student.father_name);
+    const [caste, setCaste] = useState(student.caste);
+    const [occupation, setOccupation] = useState(student.occupation);
+    const [residence, setResidence] = useState(student.residence);
+    const [email, setEmail] = useState(student.email);
+    const [password, setPassword] = useState(student.password);
+    const [remarks, setRemarks] = useState(student.remarks);
+    const [dateOfAdmission, setDateOfAdmission] = useState(student.date_of_admission.toDate().toISOString().split('T')[0]);
+    const [admissionClass, setAdmissionClass] = useState(student.class.id);
+
+    const handleUpdate = async () => {
         try {
             const classDocRef = firestore().doc(`classes/${admissionClass}`);
-
-            const newStudent = {
+            const updatedStudent = {
                 registration_number: parseInt(regno),
                 name,
                 dob: firestore.Timestamp.fromDate(new Date(dob)),
@@ -43,12 +49,24 @@ const AddStudent = () => {
                 password,
                 remarks,
                 date_of_admission: firestore.Timestamp.fromDate(new Date(dateOfAdmission)),
-                class: classDocRef
+                class: classDocRef,
             };
 
-            await firestore().collection('students').doc(regno).set(newStudent);
+            await firestore().collection('students').doc(student.registration_number.toString()).update(updatedStudent);
 
-            Alert.alert('Success', 'Student added successfully');
+            Alert.alert('Success', 'Student updated successfully');
+            navigation.goBack();
+        } catch (error) {
+            Alert.alert('Error', error.message);
+        }
+    };
+
+    const handleDelete = async () => {
+        try {
+            await firestore().collection('students').doc(student.registration_number.toString()).delete();
+
+            Alert.alert('Success', 'Student deleted successfully');
+            navigation.goBack();
         } catch (error) {
             Alert.alert('Error', error.message);
         }
@@ -58,7 +76,7 @@ const AddStudent = () => {
         <Background1>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <View style={styles.container}>
-                    <Text style={styles.login}>Add Student</Text>
+                    <Text style={styles.title}>Edit Student</Text>
                     <Field placeholder="Enter Registration Number" keyboardType="numeric" value={regno} onChangeText={setRegno} />
                     <Field placeholder="Enter Name" value={name} onChangeText={setName} />
                     <Field placeholder="Enter Date of Birth (YYYY-MM-DD)" value={dob} onChangeText={setDob} />
@@ -71,9 +89,8 @@ const AddStudent = () => {
                     <Field placeholder="Enter Password" value={password} onChangeText={setPassword} secureTextEntry />
                     <Field placeholder="Enter Remarks" value={remarks} onChangeText={setRemarks} />
                     <Field placeholder="Enter Date of Admission (YYYY-MM-DD)" value={dateOfAdmission} onChangeText={setDateOfAdmission} />
-                    
+
                     <View style={styles.inputGroup}>
-                        
                         <Picker
                             selectedValue={admissionClass}
                             onValueChange={(itemValue) => setAdmissionClass(itemValue)}
@@ -92,8 +109,9 @@ const AddStudent = () => {
                             <Picker.Item label="Class 8" value="class8" />
                         </Picker>
                     </View>
-                    
-                    <Btn pad={12} bgColor='black' textColor='white' btnText='Save' Press={handleAddData} />
+
+                    <Btn pad={12} bgColor="#4F7942" textColor="white" btnText="Save" Press={handleUpdate} />
+                    <Btn pad={12} bgColor="#D22B2B" textColor="white" btnText="Delete" Press={handleDelete} />
                 </View>
             </ScrollView>
         </Background1>
@@ -111,12 +129,11 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: 20,
     },
-    login: {
-        fontSize: 45,
+    title: {
+        fontSize: 32,
         fontWeight: 'bold',
         color: 'black',
         marginTop: 70,
-        alignSelf: 'center',
         marginBottom: 20,
     },
     inputGroup: {
@@ -143,7 +160,15 @@ const styles = StyleSheet.create({
         height: 40,
         backgroundColor: '#A6A6A6',
     },
-    
+    errorContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 18,
+    },
 });
 
-export default AddStudent;
+export default StudentDetail;
