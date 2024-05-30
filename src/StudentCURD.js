@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList, Dimensions} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Background from './Background';
 
 const StudentCRUD = ({ navigation,props }) => {
+    const [list, setList] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [students, setStudents] = useState([]);
     const [filteredStudents, setFilteredStudents] = useState([]);
@@ -15,22 +16,26 @@ const StudentCRUD = ({ navigation,props }) => {
     const getData= async()=>{
         try {
             firestore().collection('students').onSnapshot((snap)=>{
-                console.log(snap);
+                const tempArray=[];
+                snap.forEach(item=>{
+                    tempArray.push(item.data());
+                })
+                setList(tempArray);
             })
         } catch (error) {
             
         }
     }
 
-    // const handleSearch = (query) => {
-    //     setSearchQuery(query);
-    //     if (query) {
-    //         const filtered = students.filter(student => student.registrationNumber.includes(query));
-    //         setFilteredStudents(filtered);
-    //     } else {
-    //         setFilteredStudents(students);
-    //     }
-    // };
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+        if (query) {
+            const filtered = students.filter(student => student.registrationNumber.includes(query));
+            setFilteredStudents(filtered);
+        } else {
+            setFilteredStudents(students);
+        }
+    };
 
     return (
         <Background>
@@ -48,26 +53,44 @@ const StudentCRUD = ({ navigation,props }) => {
                         <Text style={styles.addButtonText}>+</Text>
                     </TouchableOpacity>
                 </View>
-                <FlatList
-                    data={filteredStudents}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <View style={styles.studentItem}>
-                            <Text style={styles.studentText}>Reg No: {item.registrationNumber}</Text>
-                            <Text style={styles.studentText}>Name: {item.studentName}</Text>
-                            {/* Add more fields as needed */}
-                        </View>
-                    )}
-                />
+              
+                <View style={styles.cardContainer}>
+                    <Text style={{ marginVertical: 20, fontSize: 20, fontWeight: 'bold', color:'black'}}>
+                        All Students:
+                    </Text>
+
+                    <FlatList
+                        data={list}
+                        renderItem={item => {
+                            const cardIndex = item.index;
+                            if (item.item !== null) {
+                            return (
+                                <TouchableOpacity
+                                style={styles.card}
+                                onPress={() => handleCardPress(item.item.id, item.item.text)}
+                                onLongPress={() =>
+                                    handleCardLongPress(item.item.id, item.item.text)
+                                }>
+                                <Text>{item.item.registration_number}.  {item.item.name}</Text>
+                                </TouchableOpacity>
+                            );
+                            }
+                        }}
+                        />
+                    </View>
             </View>
         </Background>
     );
 };
 
+const { height, width } = Dimensions.get('screen');
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+        
+        alignItems: 'center',
     },
     stu:{
         color: 'black',
@@ -118,6 +141,18 @@ const styles = StyleSheet.create({
     studentText: {
         fontSize: 16,
     },
+
+    cardContainer: {
+        
+        marginTop: 50,
+      },
+      card: {
+        backgroundColor: '#4F7942',
+        width: width - 40,
+        padding: 20,
+        borderRadius: 10,
+        marginVertical: 10,
+      },
 });
 
 export default StudentCRUD;
