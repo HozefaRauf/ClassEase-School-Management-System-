@@ -1,106 +1,98 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Alert, ScrollView } from 'react-native';
-import Background from './Background';
+import { View, Text, StyleSheet } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import Background1 from './Background1';
 
-const StudentMarks = (props) => {
-    const { email, password } = props;
-    const [marksInfo, setMarksInfo] = useState(null);
+const StudentMarks = ({ route }) => {
+    const { registrationNumber } = route.params || {};
+    const [marks, setMarks] = useState({
+        first: [],
+        midterm: [],
+        finalterm: []
+    });
 
     useEffect(() => {
-        const fetchStudentMarks = async () => {
+        const fetchMarks = async () => {
             try {
-                const usersRef = firestore().collection('students');
-                const querySnapshot = await usersRef.where('email', '==', email).where('password', '==', password).get();
+                // Fetch marks data from Firestore based on the registration number
+                const marksRef = firestore().collection('marks').doc(registrationNumber);
+                const doc = await marksRef.get();
 
-                if (querySnapshot.empty) {
-                    throw new Error('No user found with this email and password.');
+                if (doc.exists) {
+                    const marksData = doc.data();
+                    setMarks(marksData);
+                } else {
+                    console.log("No marks data found for registration number:", registrationNumber);
                 }
-
-                const userDoc = querySnapshot.docs[0];
-                const studentId = userDoc.id;
-
-                const marksRef = firestore().collection('students').doc(studentId).collection('English');
-                const marksData = {};
-
-                // Fetch marks for first term
-                const firstTermDoc = await marksRef.doc('first').get();
-                if (firstTermDoc.exists) {
-                    marksData.firstTerm = firstTermDoc.data();
-                }
-
-                // Fetch marks for mid term
-                const midTermDoc = await marksRef.doc('mid').get();
-                if (midTermDoc.exists) {
-                    marksData.midTerm = midTermDoc.data();
-                }
-
-                // Fetch marks for final term
-                const finalTermDoc = await marksRef.doc('final').get();
-                if (finalTermDoc.exists) {
-                    marksData.finalTerm = finalTermDoc.data();
-                }
-
-                setMarksInfo(marksData);
             } catch (error) {
-                Alert.alert(error.message);
-                setMarksInfo(null);
+                console.error("Error fetching marks:", error);
             }
         };
 
-        fetchStudentMarks();
-    }, [email, password]);
+        fetchMarks();
+    }, [registrationNumber]);
 
     return (
-        <Background>
-            <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-                <View style={styles.container}>
-                    {marksInfo && (
-                        <View style={styles.resultContainer}>
-                            <Text style={styles.title}>Marks</Text>
-                            <Text style={styles.subtitle}>First Term:</Text>
-                            <Text style={styles.markText}>Marks: {marksInfo.firstTerm ? marksInfo.firstTerm.marks : 'N/A'}</Text>
-                            <Text style={styles.subtitle}>Mid Term:</Text>
-                            <Text style={styles.markText}>Marks: {marksInfo.midTerm ? marksInfo.midTerm.marks : 'N/A'}</Text>
-                            <Text style={styles.subtitle}>Final Term:</Text>
-                            <Text style={styles.markText}>Marks: {marksInfo.finalTerm ? marksInfo.finalTerm.marks : 'N/A'}</Text>
-                        </View>
-                    )}
+        <Background1>
+        <View style={styles.container}>
+            <Text style={styles.title}>Marks</Text>
+            <View style={styles.marksContainer}>
+                <View style={styles.termContainer}>
+                    <Text style={styles.termTitle}>First Term</Text>
+                    {marks.first.map((mark, index) => (
+                        <Text key={index} style={styles.mark}>{mark}</Text>
+                    ))}
                 </View>
-            </ScrollView>
-        </Background>
+                <View style={styles.termContainer}>
+                    <Text style={styles.termTitle}>Midterm</Text>
+                    {marks.midterm.map((mark, index) => (
+                        <Text key={index} style={styles.mark}>{mark}</Text>
+                    ))}
+                </View>
+                <View style={styles.termContainer}>
+                    <Text style={styles.termTitle}>Final Term</Text>
+                    {marks.finalterm.map((mark, index) => (
+                        <Text key={index} style={styles.mark}>{mark}</Text>
+                    ))}
+                </View>
+            </View>
+        </View>
+        </Background1>
     );
 };
 
 const styles = StyleSheet.create({
-    scrollViewContainer: {
-        flexGrow: 1,
-    },
     container: {
-        padding: 20,
-        flexGrow: 1,
+        flex: 1,
+        alignItems: 'center', 
     },
     title: {
-        fontSize: 24,
+        fontSize: 45,
         fontWeight: 'bold',
-        marginBottom: 20,
         color: 'black',
-        textAlign: 'center',
+        marginTop: 110,
+        alignSelf: 'center',
+        marginBottom: 20,
     },
-    resultContainer: {
+    marksContainer: {
         marginTop: 20,
+        flexDirection: 'column',
+        gap:30,
+        justifyContent: 'space-around',
+    },
+    termContainer: {
         alignItems: 'center',
     },
-    subtitle: {
+    termTitle: {
+        color: '#8696A6',
+        fontSize: 20,
         fontWeight: 'bold',
-        fontSize: 18,
         marginBottom: 10,
-        color: 'black',
     },
-    markText: {
+    mark: {
+        color: '#A6A6A6',
         fontSize: 16,
         marginBottom: 5,
-        color: 'black',
     },
 });
 

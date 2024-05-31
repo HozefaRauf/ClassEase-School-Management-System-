@@ -7,7 +7,7 @@ import Btn from './Btn';
 import StudentFees from './StudentFees';
 
 const Dashboard = ({ navigation, route }) => {
-    const { email, password, classes } = route.params || {};
+    const { email, password, classes, registrationNumber } = route.params || {};
     const [timetableUrl, setTimetableUrl] = useState(null);
     const [syllabusUrl, setSyllabusUrl] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -101,7 +101,7 @@ const Dashboard = ({ navigation, route }) => {
                     <View style={styles.section}>
                         <Text style={styles.title}>Student Portal</Text>
                         <Text style={styles.subtitle}>Marks</Text>
-                        <Btn pad={12} bgColor='green' textColor='white' btnText='Marks' onPress={() => navigation.navigate("StudentMarks")} />
+                        <Btn pad={12} bgColor='green' textColor='white' btnText='Marks' Press={() => navigation.navigate("StudentMarks", { registrationNumber: registrationNumber })} />
                         <Text style={styles.subtitle}>Fee Status</Text>
                         <StudentFees email={email} password={password} />
                         <Text style={styles.subtitle}>Timetable</Text>
@@ -187,5 +187,3 @@ const styles = StyleSheet.create({
 });
 
 export default Dashboard;
-
-                       

@@ -5,18 +5,18 @@ import Background from './Background';
 import Field from './Field';
 import Btn from './Btn';
 
-const StudentLogin = ({ navigation }) => { // Destructure navigation from props
+const StudentLogin = ({ navigation }) => {
     const [message, setMessage] = useState('');
-    const [email, setEmail] = useState('');
+    const [registrationNumber, setRegistrationNumber] = useState('');
     const [password, setPassword] = useState('');
 
     const handleLogin = async () => {
         try {
             const usersRef = firestore().collection('students');
-            const querySnapshot = await usersRef.where('email', '==', email).get();
+            const querySnapshot = await usersRef.where('registration_number', '==', Number(registrationNumber)).get();
 
             if (querySnapshot.empty) {
-                throw new Error('No user found with this email.');
+                throw new Error('No user found with this registration number.');
             }
 
             const userDoc = querySnapshot.docs[0];
@@ -26,9 +26,14 @@ const StudentLogin = ({ navigation }) => { // Destructure navigation from props
             if (password !== userData.password) {
                 throw new Error('Invalid password');
             }
-            
-            // Pass email, password, and class to the dashboard navigation parameters
-            navigation.navigate("StudentDashboard", { email: email, password: password, classes: userData.class });
+
+            // Pass registrationNumber, email, password, and class to the dashboard navigation parameters
+            navigation.navigate("StudentDashboard", { 
+                registrationNumber: registrationNumber, 
+                email: userData.email, 
+                password: password, 
+                classes: userData.class 
+            });
         } catch (error) {
             setMessage(error.message);
         }
@@ -43,7 +48,7 @@ const StudentLogin = ({ navigation }) => { // Destructure navigation from props
         <Background>
             <View style={styles.container}>
                 <Text style={styles.login}>Login</Text>
-                <Field placeholder="Email" keyboardType={"email-address"} value={email} onChangeText={setEmail}/>
+                <Field placeholder="Registration Number" keyboardType={"number-pad"} value={registrationNumber} onChangeText={setRegistrationNumber}/>
                 <Field placeholder="Password" secureTextEntry={true} value={password} onChangeText={setPassword}/>
                 <View style={styles.forgotView}>
                     <Text style={styles.forgot} onPress={handleForgotPassword}>Forgot Password?</Text>
