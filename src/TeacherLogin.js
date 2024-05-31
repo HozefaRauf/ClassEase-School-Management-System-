@@ -1,5 +1,5 @@
 import React, { useState } from'react';
-import { StyleSheet, View, Text, Alert } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Background from './Background';
 import Field from './Field';
@@ -9,10 +9,13 @@ const TeacherLogin = (props) => {
     const [message, setMessage] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+
 
 
     const handleLogin = async () => {
         try {
+            setLoading(true);
             const usersRef = firestore().collection('teacher');
             const querySnapshot = await usersRef.where('email', '==', email).get();
 
@@ -31,11 +34,6 @@ const TeacherLogin = (props) => {
         } catch (error) {
             setMessage(error.message);
         }
-    };
-
-    const handleForgotPassword = () => {
-        // Implement your logic here for password recovery, e.g., sending a password reset email
-        Alert.alert('Forgot Password', 'Please contact your administrator for password recovery.');
     };
     
     return (
@@ -80,6 +78,11 @@ const styles = StyleSheet.create({
     forgotView:{
         alignSelf: 'flex-end',
         marginRight: 42,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     
 })

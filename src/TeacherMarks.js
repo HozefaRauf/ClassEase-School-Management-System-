@@ -1,7 +1,7 @@
 // TeacherMarks.js
 
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Alert, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Alert, TextInput, ScrollView,ActivityIndicator } from 'react-native';
 import Background from './Background';
 import Btn from './Btn';
 import firestore from '@react-native-firebase/firestore';
@@ -70,7 +70,7 @@ const TeacherMarks = (props) => {
         let marks;
         switch (term) {
             case 'first':
-                marks = firstMarks;
+                marks = firstTermMarks;
                 break;
             case 'mid':
                 marks = midTermMarks;

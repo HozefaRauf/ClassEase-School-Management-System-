@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet,ActivityIndicator } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Background1 from './Background1';
 
 const StudentMarks = ({ route }) => {
     const { registrationNumber } = route.params || {};
+    
     const [marks, setMarks] = useState({
         first: [],
         midterm: [],
         finalterm: []
     });
+    const [loading, setLoading] = useState(false);
+
 
     useEffect(() => {
         const fetchMarks = async () => {
             try {
+                setLoading(true);
                 // Fetch marks data from Firestore based on the registration number
                 const marksRef = firestore().collection('marks').doc(registrationNumber);
                 const doc = await marksRef.get();
@@ -27,10 +31,20 @@ const StudentMarks = ({ route }) => {
             } catch (error) {
                 console.error("Error fetching marks:", error);
             }
+            finally {
+                setLoading(false);
+            }
         };
 
         fetchMarks();
     }, [registrationNumber]);
+    if (loading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="black" />
+            </View>
+        );
+    } 
 
     return (
         <Background1>
@@ -93,6 +107,11 @@ const styles = StyleSheet.create({
         color: '#A6A6A6',
         fontSize: 16,
         marginBottom: 5,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Alert } from 'react-native';
+import { StyleSheet, View, Text, Alert, ActivityIndicator } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Background from './Background';
 import Field from './Field';
@@ -9,10 +9,13 @@ const StudentLogin = ({ navigation }) => {
     const [message, setMessage] = useState('');
     const [registrationNumber, setRegistrationNumber] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleLogin = async () => {
         try {
+            setLoading(true);
             const usersRef = firestore().collection('students');
+            
             const querySnapshot = await usersRef.where('registration_number', '==', Number(registrationNumber)).get();
 
             if (querySnapshot.empty) {
@@ -36,6 +39,8 @@ const StudentLogin = ({ navigation }) => {
             });
         } catch (error) {
             setMessage(error.message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -44,28 +49,52 @@ const StudentLogin = ({ navigation }) => {
         Alert.alert('Forgot Password', 'Please contact your administrator for password recovery.');
     };
 
+    if (loading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="black" />
+            </View>
+        );
+    } 
+
     return (
         <Background>
             <View style={styles.container}>
                 <Text style={styles.login}>Login</Text>
-                <Field placeholder="Registration Number" keyboardType={"number-pad"} value={registrationNumber} onChangeText={setRegistrationNumber}/>
-                <Field placeholder="Password" secureTextEntry={true} value={password} onChangeText={setPassword}/>
+                <Field 
+                    placeholder="Registration Number" 
+                    keyboardType="number-pad" 
+                    value={registrationNumber} 
+                    onChangeText={setRegistrationNumber} 
+                />
+                <Field 
+                    placeholder="Password" 
+                    secureTextEntry 
+                    value={password} 
+                    onChangeText={setPassword} 
+                />
                 <View style={styles.forgotView}>
                     <Text style={styles.forgot} onPress={handleForgotPassword}>Forgot Password?</Text>
                 </View>
-                <Btn pad={12} bgColor='black' textColor='white' btnText='Login' Press={handleLogin}/>
+                <Btn 
+                    pad={12} 
+                    bgColor="black" 
+                    textColor="white" 
+                    btnText="Login" 
+                    Press={handleLogin} 
+                />
                 <Text style={styles.error}>{message}</Text>
             </View>
         </Background>
     );
-}
+};
 
 const styles = StyleSheet.create({
-    container:{
+    container: {
         alignItems: 'center',
         width: '100%',
     },
-    login:{
+    login: {
         fontSize: 45,
         fontWeight: 'bold',
         color: 'black',
@@ -73,22 +102,27 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginBottom: 50,
     },
-    forgot:{
+    forgot: {
         fontSize: 15,
         fontWeight: 'bold',
         color: 'black',
         marginTop: 2,
         marginBottom: 20,
     },
-    forgotView:{
+    forgotView: {
         alignSelf: 'flex-end',
         marginRight: 42,
     },
-    error:{
+    error: {
         fontSize: 15,
         fontWeight: 'bold',
         color: 'red',
         marginTop: 10,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 

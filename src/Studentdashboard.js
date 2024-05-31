@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Image, ScrollView, Alert } from 'react-native';
+import { StyleSheet, View, Text, Image, ScrollView, Alert,ActivityIndicator } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import Background1 from './Background1';
@@ -12,10 +12,12 @@ const Dashboard = ({ navigation, route }) => {
     const [syllabusUrl, setSyllabusUrl] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [loading1, setLoading1] = useState(false);
 
     useEffect(() => {
         const fetchTimetable = async () => {
             try {
+                setLoading1(true);
                 // Fetch the student document from Firestore based on email and password
                 const studentRef = firestore().collection('students').where('email', '==', email).where('password', '==', password);
                 const snapshot = await studentRef.get();
@@ -49,7 +51,15 @@ const Dashboard = ({ navigation, route }) => {
                 setError('Error fetching timetable');
             } finally {
                 setLoading(false);
+                setLoading1(false);
             }
+            if (loading1) {
+                return (
+                    <View style={styles.loadingContainer}>
+                        <ActivityIndicator size="large" color="black" />
+                    </View>
+                );
+            } 
         };
 
         const fetchSyllabus = async () => {
@@ -185,6 +195,11 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         elevation: 7,
         marginTop: 70,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 
