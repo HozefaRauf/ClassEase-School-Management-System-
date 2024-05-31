@@ -29,6 +29,10 @@ import TeacherCURD from './src/TeacherCURD.js';
 import AddTeacher from './src/AddTeacher.js';
 import TeacherDetail from './src/TeacherDetail.js';
 
+import FeeDetail from './src/FeeDetail.js';
+import FeeCURD from './src/FeeCURD.js';
+import AddFee from './src/AddFee.js';
+
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -48,6 +52,9 @@ function App() {
         <Stack.Screen name="StudentDetail" component={StudentDetail} />
         <Stack.Screen name="AddTeacher" component={AddTeacher} />
         <Stack.Screen name="TeacherDetail" component={TeacherDetail} />
+        <Stack.Screen name="FeeCURD" component={FeeCURD} />
+        <Stack.Screen name="FeeDetail" component={FeeDetail} />
+        <Stack.Screen name="AddFee" component={AddFee} />
         <Stack.Screen name="TeacherDashboard" component={TeacherDashboard} />
         <Stack.Screen name="StudentMarks" component={StudentMarks} />
         <Stack.Screen name="StudentTimetable" component={StudentTimetable} />
