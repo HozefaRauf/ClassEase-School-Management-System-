@@ -35,6 +35,10 @@ const TeacherLogin = (props) => {
             setMessage(error.message);
         }
     };
+    const handleForgotPassword = () => {
+        // Implement your logic here for password recovery, e.g., sending a password reset email
+        Alert.alert('Forgot Password', 'Please contact your administrator for password recovery.');
+    };
     
     return (
         <Background>
