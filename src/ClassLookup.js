@@ -38,8 +38,9 @@ const ClassLookup = (props) => {
                         value={registrationNumber}
                         onChangeText={setRegistrationNumber}
                         style={styles.inputField}
+                        color='black'
                     />
-                    <Btn pad={12} bgColor='blue' textColor='white' btnText='Search Marks' Press={handleSearch} />
+                    <Btn pad={12} bgColor='green' textColor='white' btnText='Search Marks' Press={handleSearch} />
                     
                     {marks && (
                         <View style={styles.marksContainer}>

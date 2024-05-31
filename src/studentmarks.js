@@ -104,9 +104,10 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     mark: {
-        color: '#A6A6A6',
+        color: 'black',
         fontSize: 16,
         marginBottom: 5,
+        fontWeight: 'bold',
     },
     loadingContainer: {
         flex: 1,

@@ -12,12 +12,11 @@ const Dashboard = ({ navigation, route }) => {
     const [syllabusUrl, setSyllabusUrl] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [loading1, setLoading1] = useState(false);
 
     useEffect(() => {
         const fetchTimetable = async () => {
             try {
-                setLoading1(true);
+                
                 // Fetch the student document from Firestore based on email and password
                 const studentRef = firestore().collection('students').where('email', '==', email).where('password', '==', password);
                 const snapshot = await studentRef.get();
@@ -51,15 +50,10 @@ const Dashboard = ({ navigation, route }) => {
                 setError('Error fetching timetable');
             } finally {
                 setLoading(false);
-                setLoading1(false);
+                
             }
-            if (loading1) {
-                return (
-                    <View style={styles.loadingContainer}>
-                        <ActivityIndicator size="large" color="black" />
-                    </View>
-                );
-            } 
+            
+            
         };
 
         const fetchSyllabus = async () => {
@@ -117,7 +111,8 @@ const Dashboard = ({ navigation, route }) => {
                         <Text style={styles.subtitle}>Timetable</Text>
                         <View style={styles.container1234}>
                             {loading ? (
-                                <Text>Loading...</Text>
+                                <Text style={{ color: 'black' }}>Loading...</Text>
+
                             ) : error ? (
                                 <Text>{error}</Text>
                             ) : (
@@ -131,7 +126,8 @@ const Dashboard = ({ navigation, route }) => {
                         <Text style={styles.subtitle}>Syllabus</Text>
                         <View style={styles.container1234}>
                             {loading ? (
-                                <Text>Loading...</Text>
+                                <Text style={{ color: 'black' }}>Loading...</Text>
+
                             ) : error ? (
                                 <Text>{error}</Text>
                             ) : (
