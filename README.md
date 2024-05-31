@@ -2,7 +2,7 @@ This is a new [**React Native**](https://reactnative.dev) project, School Manage
 
 # Getting Started
 
-Project Title : ClassEase School Management System
+Project Title : **ClassEase School Management System**
 
 Group Members : 
 Muhammad Usman Malik Reg No (FA21-BCS-072) 
