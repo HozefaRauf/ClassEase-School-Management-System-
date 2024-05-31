@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image,ActivityIndicator } from 'react-native';
 import Background from './Background';
 import Btn from './Btn';
 import 'firebase/firestore';
