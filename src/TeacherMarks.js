@@ -188,7 +188,7 @@ const TeacherMarks = (props) => {
                                         placeholder={`Subject ${index + 1}`}
                                         keyboardType="numeric"
                                         value={mark}
-                                        onChangeText={(text) => handleMarksChange(text, index, 'mid')}
+                                        onChangeText={(text) => handleMarksChange(text, index, 'midterm')}
                                     />
                                 </View>
                             ))}
@@ -208,7 +208,7 @@ style={styles.input}
 placeholder={'Subject ${index + 1}'}
 keyboardType="numeric"
 value={mark}
-onChangeText={(text) => handleMarksChange(text, index, 'final')}
+onChangeText={(text) => handleMarksChange(text, index, 'finalterm')}
 />
 </View>
 ))}

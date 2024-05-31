@@ -1,70 +1,29 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Alert, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Alert, ScrollView, TextInput } from 'react-native';
 import Background from './Background';
 import Btn from './Btn';
 import firestore from '@react-native-firebase/firestore';
-import Field from './Field';
 
 const ClassLookup = (props) => {
-    const fetchStudentByRegNo = async (regNo) => {
-        try {
-            console.log(`Fetching student with registration number: ${regNo}`);
-            const querySnapshot = await firestore().collection('students').where('registrationNumber', '==', regNo).get();
-    
-            if (querySnapshot.empty) {
-                console.log('No student found with this registration number.');
-                throw new Error('No student found with this registration number.');
-            }
-    
-            const studentDoc = querySnapshot.docs[0];
-            const studentData = studentDoc.data();
-            const { name, class: currentClass } = studentData; // Destructure the data
-            return [{ name, currentClass }];
-        } catch (error) {
-            console.error("Error fetching student:", error);
-            throw error;
+    const [registrationNumber, setRegistrationNumber] = useState('');
+    const [marks, setMarks] = useState(null);
+
+    const handleSearch = async () => {
+        if (registrationNumber === '') {
+            Alert.alert('Please enter a registration number.');
+            return;
         }
-    };
 
-    const fetchStudentsByClass = async (classInput) => {
         try {
-            console.log(`Fetching students in class: ${classInput}`);
-            const querySnapshot = await firestore().collection('students').where('class', '==', classInput).get();
-
-            if (querySnapshot.empty) {
-                console.log('No students found in this class.');
-                throw new Error('No students found in this class.');
-            }
-
-            const students = [];
-            querySnapshot.forEach((doc) => {
-                const studentData = doc.data();
-                students.push({ name: studentData.name, currentClass: studentData.class });
-            });
-
-            return students;
-        } catch (error) {
-            console.error("Error fetching students:", error);
-            throw error;
-        }
-    };
-
-    const [searchOption, setSearchOption] = useState('registrationNumber');
-    const [searchInput, setSearchInput] = useState('');
-    const [studentList, setStudentList] = useState([]);
-
-    const handleLookup = async () => {
-        try {
-            let data;
-            if (searchOption === 'registrationNumber') {
-                data = await fetchStudentByRegNo(parseInt(searchInput));
+            const doc = await firestore().collection('marks').doc(registrationNumber.toString()).get();
+            if (doc.exists) {
+                setMarks(doc.data());
             } else {
-                data = await fetchStudentsByClass(searchInput);
+                Alert.alert('No marks found for this registration number.');
             }
-            setStudentList(data);
         } catch (error) {
-            Alert.alert(error.message);
-            setStudentList([]);
+            console.error('Error fetching marks:', error);
+            Alert.alert('Error fetching marks:', error.message);
         }
     };
 
@@ -72,39 +31,32 @@ const ClassLookup = (props) => {
         <Background>
             <ScrollView contentContainerStyle={styles.scrollViewContainer}>
                 <View style={styles.container}>
-                    <Text style={styles.title}>Student Lookup</Text>
-                    <View style={styles.searchOptionContainer}>
-                        <Text style={styles.optionText}>Search by:</Text>
-                        <Btn
-                            pad={12}
-                            bgColor={searchOption === 'registrationNumber' ? 'black' : 'gray'}
-                            textColor='white'
-                            btnText='Reg No'
-                            Press={() => setSearchOption('registrationNumber')}
-                        />
-                        <Btn
-                            pad={12}
-                            bgColor={searchOption === 'class' ? 'black' : 'gray'}
-                            textColor='white'
-                            btnText='Class'
-                            Press={() => setSearchOption('class')}
-                        />
-                    </View>
-                    <Field
-                        placeholder={searchOption === 'registrationNumber' ? 'Enter Registration Number' : 'Enter Class'}
-                        value={searchInput}
-                        onChangeText={setSearchInput}
-                        keyboardType={searchOption === 'registrationNumber' ? 'numeric' : 'default'}
+                    <Text style={styles.title}>View Student Marks</Text>
+                    <TextInput
+                        placeholder="Enter Registration Number"
+                        keyboardType="numeric"
+                        value={registrationNumber}
+                        onChangeText={setRegistrationNumber}
+                        style={styles.inputField}
                     />
-                    <Btn pad={12} bgColor='black' textColor='white' btnText='Lookup' Press={handleLookup} />
-                    {studentList.length > 0 && (
-                        <View style={styles.resultContainer}>
-                            {studentList.map((student, index) => (
-                                <View key={index} style={styles.studentInfo}>
-                                    <Text style={styles.resultText}>Student Name: {student.name}</Text>
-                                    <Text style={styles.resultText}>Current Class: {student.currentClass}</Text>
-                                </View>
-                            ))}
+                    <Btn pad={12} bgColor='blue' textColor='white' btnText='Search Marks' Press={handleSearch} />
+                    
+                    {marks && (
+                        <View style={styles.marksContainer}>
+                            <Text style={styles.subtitle}>First Term Marks</Text>
+                            {marks.first ? marks.first.map((mark, index) => (
+                                <Text key={index} style={styles.markText}>{`Subject ${index + 1}: ${mark}`}</Text>
+                            )) : <Text>No First Term Marks</Text>}
+
+                            <Text style={styles.subtitle}>Mid Term Marks</Text>
+                            {marks.midterm ? marks.midterm.map((mark, index) => (
+                                <Text key={index} style={styles.markText}>{`Subject ${index + 1}: ${mark}`}</Text>
+                            )) : <Text>No Mid Term Marks</Text>}
+
+                            <Text style={styles.subtitle}>Final Term Marks</Text>
+                            {marks.finalterm ? marks.finalterm.map((mark, index) => (
+                                <Text key={index} style={styles.markText}>{`Subject ${index + 1}: ${mark}`}</Text>
+                            )) : <Text>No Final Term Marks</Text>}
                         </View>
                     )}
                 </View>
@@ -116,10 +68,13 @@ const ClassLookup = (props) => {
 const styles = StyleSheet.create({
     scrollViewContainer: {
         flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     container: {
         padding: 20,
-        flexGrow: 1,
+        width: '100%',
+        maxWidth: 600,
     },
     title: {
         fontSize: 24,
@@ -128,29 +83,35 @@ const styles = StyleSheet.create({
         color: 'black',
         textAlign: 'center',
     },
-    searchOptionContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginBottom: 20,
-    },
-    optionText: {
+    subtitle: {
         fontSize: 18,
-        marginRight: 10,
-    },
-    resultContainer: {
-        marginTop: 20,
-        alignItems: 'center',
-    },
-    resultText: {
-        fontSize: 18,
-        marginBottom: 10,
+        fontWeight: 'bold',
+        marginVertical: 10,
         color: 'black',
-        },
-        studentInfo: {
+        textAlign: 'center',
+    },
+    inputField: {
+        borderWidth: 1,
+        borderColor: 'gray',
+        padding: 10,
+        borderRadius: 5,
         marginBottom: 20,
         color: 'black',
         fontWeight: 'bold',
-        },
-        });
-        
-        export default ClassLookup;
+        width: '100%',
+        textAlign: 'center',
+    },
+    marksContainer: {
+        marginTop: 20,
+        padding: 20,
+        backgroundColor: '#f8f8f8',
+        borderRadius: 5,
+    },
+    markText: {
+        fontSize: 16,
+        color: 'black',
+        marginBottom: 5,
+    },
+});
+
+export default ClassLookup;
