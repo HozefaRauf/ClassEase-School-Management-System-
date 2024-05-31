@@ -1,24 +1,27 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+This is a new [**React Native**](https://reactnative.dev) project, School Management System
 
 # Getting Started
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+Project Title : ClassEase School Management System
 
-## Step 1: Start the Metro Server
+Group Members : 
+Muhammad Usman Malik Reg No (FA21-BCS-072) 
+Hammad Ur Rehman Reg No (FA21-BCS-055)
+Hozefa Rauf Reg No (FA21-BCS-057)
+Hassan Haider Reg No (FA21-BCS-088)
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
 
-To start Metro, run the following command from the _root_ of your React Native project:
 
-```bash
-# using npm
-npm start
+## Technology Used
+Front-end Development : **React-Native**
+Backend Development : **Firestore**
+Third Party Packages : 
+                     **1 .React-Native-html-to-pdf**
+                     **2. React-Native/picker**
+                     **3. React-Native-Document-Picker**
 
-# OR using Yarn
-yarn start
-```
 
-## Step 2: Start your Application
+## Step 2: Start the Application by following the steps below
 
 Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
 
