@@ -3,11 +3,11 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList, Dimensio
 import firestore from '@react-native-firebase/firestore';
 import Background from './Background';
 
-const StudentCURD = ({ navigation }) => {
+const TeacherCURD = ({ navigation }) => {
     const [list, setList] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [students, setStudents] = useState([]);
-    const [filteredStudents, setFilteredStudents] = useState([]);
+    const [teachers, setTeachers] = useState([]);
+    const [filteredTeachers, setFilteredTeachers] = useState([]);
 
     useEffect(() => {
         getData();
@@ -15,73 +15,70 @@ const StudentCURD = ({ navigation }) => {
 
     const getData = async () => {
         try {
-            firestore().collection('students').onSnapshot((snap) => {
+            firestore().collection('teacher').onSnapshot((snap) => {
                 const tempArray = [];
                 snap.forEach(item => {
                     tempArray.push(item.data());
                 });
                 setList(tempArray);
-                setStudents(tempArray);
-                setFilteredStudents(tempArray);
+                setTeachers(tempArray);
+                setFilteredTeachers(tempArray);
             });
         } catch (error) {
-            console.error("Error fetching student data: ", error);
+            console.error("Error fetching teacher data: ", error);
         }
     };
 
     const handleSearch = (query) => {
         setSearchQuery(query);
         if (query) {
-            const filtered = students.filter(student =>
-                student.registration_number &&
-                student.registration_number.toString().includes(query)
+            const filtered = teachers.filter(teacher =>
+                teacher.tid &&
+                teacher.tid.toString().includes(query)
             );
-            setFilteredStudents(filtered);
+            setFilteredTeachers(filtered);
         } else {
-            setFilteredStudents(students);
+            setFilteredTeachers(teachers);
         }
     };
 
-    const handleStudentPress = (student) => {
-        const preparedStudent = {
-            ...student,
-            dob: student.dob ? student.dob.toDate().toISOString() : '',
-            date_of_admission: student.date_of_admission ? student.date_of_admission.toDate().toISOString() : '',
-            classId: student.class.id,
+    const handleTeacherPress = (teacher) => {
+        const preparedTeacher = {
+            ...teacher,
         };
-        navigation.navigate('StudentDetail', { student: preparedStudent });
+        navigation.navigate('TeacherDetail', { teacher: preparedTeacher });
     };
 
     return (
         <Background>
             <View style={styles.container}>
-                <Text style={styles.stu}>Student</Text>
+                <Text style={styles.stu}>Teacher</Text>
                 <View style={styles.searchContainer}>
                     <TextInput
                         style={styles.searchInput}
-                        placeholder="Search by Registration Number"
+                        placeholder="Search by Teacher ID"
                         value={searchQuery}
                         onChangeText={handleSearch}
                         placeholderTextColor='#A6A6A6'
                     />
-                    <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddStudent')}>
+                    <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddTeacher')}>
                         <Text style={styles.addButtonText}>+</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.cardContainer}>
                     <Text style={{ marginVertical: 20, fontSize: 20, fontWeight: 'bold', color: 'black' }}>
-                        All Students:
+                        All Teachers:
                     </Text>
 
                     <FlatList
-                        data={filteredStudents}
+                        data={filteredTeachers}
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 style={styles.card}
-                                onPress={() => handleStudentPress(item)}
+                                onPress={() => handleTeacherPress(item)}
                             >
-                                <Text>{item.registration_number}. {item.name}</Text>
+                                <Text>{item.tid}. {item.name}</Text>
                             </TouchableOpacity>
                         )}
                         keyExtractor={(item, index) => index.toString()}
@@ -159,4 +156,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default StudentCURD;
+export default TeacherCURD;

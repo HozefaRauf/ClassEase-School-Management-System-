@@ -57,7 +57,7 @@ const AdminPortal = (props) => {
                             <Image source={require('./assets/graduates.png')} style={styles.smimage} />
                             <Text style={styles.bntText}>Student</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("AdminSyllabus")}>
+                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("TeacherCURD")}>
                             <Image 
                                 source={require('./assets/teacher.png')} 
                                 style={styles.smimage} 
@@ -75,7 +75,7 @@ const AdminPortal = (props) => {
                     </View>
                     
                     <View style={styles.buttonRow}>
-                    <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("AdminFee")}>
+                    <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("FeeCURD")}>
                             <Image 
                                 source={require('./assets/fees.png')} 
                                 style={styles.smimage} 

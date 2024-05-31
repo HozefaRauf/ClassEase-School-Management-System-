@@ -3,11 +3,11 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList, Dimensio
 import firestore from '@react-native-firebase/firestore';
 import Background from './Background';
 
-const StudentCURD = ({ navigation }) => {
+const FeeCURD = ({ navigation }) => {
     const [list, setList] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [students, setStudents] = useState([]);
-    const [filteredStudents, setFilteredStudents] = useState([]);
+    const [fees, setFees] = useState([]);
+    const [filteredFees, setFilteredFees] = useState([]);
 
     useEffect(() => {
         getData();
@@ -15,47 +15,41 @@ const StudentCURD = ({ navigation }) => {
 
     const getData = async () => {
         try {
-            firestore().collection('students').onSnapshot((snap) => {
+            firestore().collection('fee').onSnapshot((snap) => {
                 const tempArray = [];
                 snap.forEach(item => {
                     tempArray.push(item.data());
                 });
                 setList(tempArray);
-                setStudents(tempArray);
-                setFilteredStudents(tempArray);
+                setFees(tempArray);
+                setFilteredFees(tempArray);
             });
         } catch (error) {
-            console.error("Error fetching student data: ", error);
+            console.error("Error fetching fee data: ", error);
         }
     };
 
     const handleSearch = (query) => {
         setSearchQuery(query);
         if (query) {
-            const filtered = students.filter(student =>
-                student.registration_number &&
-                student.registration_number.toString().includes(query)
+            const filtered = fees.filter(fee =>
+                fee.registration_number &&
+                fee.registration_number.toString().includes(query)
             );
-            setFilteredStudents(filtered);
+            setFilteredFees(filtered);
         } else {
-            setFilteredStudents(students);
+            setFilteredFees(fees);
         }
     };
 
-    const handleStudentPress = (student) => {
-        const preparedStudent = {
-            ...student,
-            dob: student.dob ? student.dob.toDate().toISOString() : '',
-            date_of_admission: student.date_of_admission ? student.date_of_admission.toDate().toISOString() : '',
-            classId: student.class.id,
-        };
-        navigation.navigate('StudentDetail', { student: preparedStudent });
+    const handleFeePress = (fee) => {
+        navigation.navigate('FeeDetail', { fee });
     };
 
     return (
         <Background>
             <View style={styles.container}>
-                <Text style={styles.stu}>Student</Text>
+                <Text style={styles.stu}>Fee</Text>
                 <View style={styles.searchContainer}>
                     <TextInput
                         style={styles.searchInput}
@@ -64,22 +58,22 @@ const StudentCURD = ({ navigation }) => {
                         onChangeText={handleSearch}
                         placeholderTextColor='#A6A6A6'
                     />
-                    <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddStudent')}>
+                    <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddFee')}>
                         <Text style={styles.addButtonText}>+</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.cardContainer}>
                     <Text style={{ marginVertical: 20, fontSize: 20, fontWeight: 'bold', color: 'black' }}>
-                        All Students:
+                        All Fees:
                     </Text>
 
                     <FlatList
-                        data={filteredStudents}
+                        data={filteredFees}
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 style={styles.card}
-                                onPress={() => handleStudentPress(item)}
+                                onPress={() => handleFeePress(item)}
                             >
                                 <Text>{item.registration_number}. {item.name}</Text>
                             </TouchableOpacity>
@@ -159,4 +153,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default StudentCURD;
+export default FeeCURD;

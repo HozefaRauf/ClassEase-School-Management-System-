@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Alert, ScrollView, TextInput, TouchableOpacity} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
+import { StyleSheet, View, Text, Alert, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import firestore from '@react-native-firebase/firestore';
 import Background1 from './Background1';
 import Field from './Field';
 import Btn from './Btn';
 
-const   StudentDetail = ({ route, navigation }) => {
-    // Ensure that route and route.params exist
+const StudentDetail = ({ route, navigation }) => {
     const student = route.params && route.params.student ? route.params.student : null;
 
-    // If student is not provided, show an error message
     if (!student) {
         return (
             <View style={styles.errorContainer}>
@@ -21,7 +19,7 @@ const   StudentDetail = ({ route, navigation }) => {
 
     const [regno, setRegno] = useState(student.registration_number.toString());
     const [name, setName] = useState(student.name);
-    const [dob, setDob] = useState(student.dob.toDate().toISOString().split('T')[0]);
+    const [dob, setDob] = useState(student.dob.split('T')[0]);
     const [gender, setGender] = useState(student.gender);
     const [fatherName, setFatherName] = useState(student.father_name);
     const [caste, setCaste] = useState(student.caste);
@@ -30,8 +28,8 @@ const   StudentDetail = ({ route, navigation }) => {
     const [email, setEmail] = useState(student.email);
     const [password, setPassword] = useState(student.password);
     const [remarks, setRemarks] = useState(student.remarks);
-    const [dateOfAdmission, setDateOfAdmission] = useState(student.date_of_admission.toDate().toISOString().split('T')[0]);
-    const [admissionClass, setAdmissionClass] = useState(student.class.id);
+    const [dateOfAdmission, setDateOfAdmission] = useState(student.date_of_admission.split('T')[0]);
+    const [admissionClass, setAdmissionClass] = useState(student.classId);
 
     const handleUpdate = async () => {
         try {
@@ -146,7 +144,6 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         width: 350,
         borderColor: '#A6A6A6', 
-
     },
     label: {
         fontSize: 14,
