@@ -31,6 +31,13 @@ const TeacherDashboard = (props) => {
                             />
                             <Text style={styles.bntText}>Class Details</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("AddMarks")}>
+                            <Image 
+                                source={require('./assets/add.png')} 
+                                style={styles.smimage} 
+                            />
+                            <Text style={styles.bntText}>Add Marks</Text>
+                        </TouchableOpacity>
                                               
                     </View>
                     <Btn pad={12} bgColor='green' textColor='white' btnText='Logout' Press={Dashboard} />

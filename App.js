@@ -28,6 +28,8 @@ import AddStudent from './src/AddStudent.js';
 import TeacherCURD from './src/TeacherCURD.js';
 import AddTeacher from './src/AddTeacher.js';
 import TeacherDetail from './src/TeacherDetail.js';
+import AddMarks from './src/AddMarks.js';
+
 import FeeDetail from './src/FeeDetail.js';
 import FeeCURD from './src/FeeCURD.js';
 import AddFee from './src/AddFee.js';
@@ -65,6 +67,7 @@ function App() {
         <Stack.Screen name="TeacherMarks" component={TeacherMarks} />
         <Stack.Screen name="ClassLookup" component={ClassLookup} />
         <Stack.Screen name="StudentFees" component={StudentFees} />
+        <Stack.Screen name="AddMarks" component={AddMarks} />
         
 
       </Stack.Navigator>
