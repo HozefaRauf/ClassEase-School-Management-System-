@@ -7,48 +7,12 @@ import 'firebase/firestore';
 import Home from './Home';
 
 const AdminPortal = (props) => {
-    const [feeStatus, setFeeStatus] = useState({
-        registrationNumber: '',
-        studentName: '',
-        amountDue: '',
-        amountPaid: '',
-        payableAmount: '',
-        paymentDate: '',
-        lateFees: false,
-        remarks: '',
-    });
-
-    const [reports, setReports] = useState([]);
-    const [timetable, setTimetable] = useState(null);
-    const [syllabus, setSyllabus] = useState([]);
-    const classes = ['Nursery', 'Prep', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8'];
+    
 
     useEffect(() => {
         // Fetch initial data
         //fetchReports(); // Uncomment if reports are to be fetched initially
     }, []);
-
-    const handleAddFeeStatus = () => {
-        // Handle adding fee status
-    };
-
-    const fetchReports = () => {
-        // Fetch reports
-    };
-    const handleLogout = () => {
-        // Fetch reports
-    };
-
-    const handleUploadTimetable = () => {
-        // Handle uploading timetable
-    };
-
-    const handleUploadSyllabus = (className) => {
-        // Handle uploading syllabus for a specific class
-    };
-
-   
-
    
     return (
         <Background>
@@ -113,7 +77,7 @@ const AdminPortal = (props) => {
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        flexGrow: 1, // Ensures the content can grow and scroll if needed
+        flexGrow: 1, 
     },
     section: {
         marginBottom: 20,
