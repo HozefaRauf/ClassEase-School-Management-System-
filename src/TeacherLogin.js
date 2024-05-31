@@ -1,5 +1,5 @@
 import React, { useState } from'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Alert } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Background from './Background';
 import Field from './Field';
