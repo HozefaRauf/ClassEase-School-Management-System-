@@ -46,6 +46,9 @@ const AdminPortal = (props) => {
     const handleUploadSyllabus = (className) => {
         // Handle uploading syllabus for a specific class
     };
+
+   
+
    
     return (
         <Background>
@@ -100,7 +103,7 @@ const AdminPortal = (props) => {
                     </View>
                                         
                     
-                    <Btn pad={12} bgColor='green' textColor='white' btnText='Logout' Press={handleLogout} />
+                    <Btn pad={12} bgColor='green' textColor='white' btnText='Logout' Press={() => props.navigation.navigate("AdminLogin")} />
                 </View>
             </ScrollView>
         </Background>
@@ -116,12 +119,13 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     title: {
-        fontSize: 24,
+        fontSize: 32,
         fontWeight: 'bold',
         marginBottom: 10,
         color: 'black',
         paddingBottom: 20,
         textAlign: 'center',
+        marginTop: 20,
     },
     subtitle: {
         fontWeight: 'bold',
@@ -168,6 +172,7 @@ const styles = StyleSheet.create({
         height: 100,
         display: 'flex',
         marginBottom: 30,
+        marginTop: 20,
     },
     buttonRow: {
         flexDirection: 'row',

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import Background from './Background';
+import Background1 from './Background1';
 
 const FeeCURD = ({ navigation }) => {
     const [list, setList] = useState([]);
@@ -47,7 +47,7 @@ const FeeCURD = ({ navigation }) => {
     };
 
     return (
-        <Background>
+        <Background1>
             <View style={styles.container}>
                 <Text style={styles.stu}>Fee</Text>
                 <View style={styles.searchContainer}>
@@ -82,7 +82,7 @@ const FeeCURD = ({ navigation }) => {
                     />
                 </View>
             </View>
-        </Background>
+        </Background1>
     );
 };
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import Background from './Background';
+import Background1 from './Background1';
 import firestore from '@react-native-firebase/firestore';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 
@@ -72,10 +72,10 @@ const AdminReport = () => {
     };
 
     return (
-        <Background>
+        <Background1>
             <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.section}>                  
-                    <Text style={styles.subtitle}>Reports</Text>
+                    <Text style={styles.subtitle}>Reports: </Text>
                     {students.map((student, index) => (
                         <View key={index} style={styles.studentTile}>
                             <Text style={styles.studentName}>{student.name}</Text>
@@ -95,7 +95,7 @@ const AdminReport = () => {
                     </View>
                 </TouchableOpacity>
             </ScrollView>
-        </Background>
+        </Background1>
     );
 };
 
@@ -109,10 +109,12 @@ const styles = StyleSheet.create({
     },
     subtitle: {
         fontWeight: 'bold',
-        fontSize: 18,
+        fontSize: 30,
         marginBottom: 10,
         color: 'black',
         paddingTop: 20,
+        marginBottom: 25,
+        marginTop: 10,
     },
     studentTile: {
         backgroundColor: '#f0f0f0',
