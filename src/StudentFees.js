@@ -1,27 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Alert, ScrollView } from 'react-native';
-import Background from './Background';
+import Background1 from './Background1';
 import firestore from '@react-native-firebase/firestore';
 
-const StudentFees = (props) => {
-    const { email, password } = props;
+const StudentFees = ({ registrationNumber }) => {
     const [feesInfo, setFeesInfo] = useState(null);
 
     useEffect(() => {
         const fetchStudentFees = async () => {
             try {
-                const usersRef = firestore().collection('students');
-                const querySnapshot = await usersRef.where('email', '==', email).where('password', '==', password).get();
+                const feeDoc = await firestore().collection('fee').doc(registrationNumber.toString()).get();
 
-                if (querySnapshot.empty) {
-                    throw new Error('No user found with this email and password.');
+                if (!feeDoc.exists) {
+                    throw new Error('No fee information found for this student.');
                 }
 
-                const userDoc = querySnapshot.docs[0];
-                const userData = userDoc.data();
+                const feeData = feeDoc.data();
 
-                const totalFees = userData.fees;
-                const feeStatus = userData.feeStatus ? 'Paid' : 'Unpaid';
+                const totalFees = feeData.payable_amount;
+                const feeStatus = feeData.late_fees ? 'Paid' : 'Unpaid';
 
                 setFeesInfo({ totalFees, feeStatus });
             } catch (error) {
@@ -31,10 +28,10 @@ const StudentFees = (props) => {
         };
 
         fetchStudentFees();
-    }, [email, password]);
+    }, [registrationNumber]);
 
     return (
-        <Background>
+        <Background1>
             <ScrollView contentContainerStyle={styles.scrollViewContainer}>
                 <View style={styles.container}>
                     {feesInfo && (
@@ -51,7 +48,7 @@ const StudentFees = (props) => {
                     )}
                 </View>
             </ScrollView>
-        </Background>
+        </Background1>
     );
 };
 

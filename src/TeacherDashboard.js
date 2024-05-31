@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image,ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Image,ActivityIndicator, Alert } from 'react-native';
 import Background from './Background';
 import Btn from './Btn';
 import 'firebase/firestore';
@@ -40,7 +40,7 @@ const TeacherDashboard = (props) => {
                         </TouchableOpacity>
                                               
                     </View>
-                    <Btn pad={12} bgColor='green' textColor='white' btnText='Logout' Press={Dashboard} />
+                    <Btn pad={12} bgColor='green' textColor='white' btnText='Logout' Press={() => props.navigation.navigate("TeacherLogin")} />
                                         
                     
                     
@@ -61,12 +61,13 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     title: {
-        fontSize: 24,
+        fontSize: 35,
         fontWeight: 'bold',
         marginBottom: 10,
         color: 'black',
         paddingBottom: 20,
         textAlign: 'center',
+        marginTop: 40,
     },
     subtitle: {
         fontWeight: 'bold',
@@ -82,6 +83,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginBottom: 10,
         color: 'black',
+        
     },
     classText: {
         fontSize: 16,
@@ -118,6 +120,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: "space-evenly",
         paddingBottom: 30,
+        marginTop: 60,
+        marginBottom: 10,
     },
     smimage: {
         width: 80,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Alert, ScrollView, TextInput } from 'react-native';
-import Background from './Background';
+import Background1 from './Background1';
 import Btn from './Btn';
 import firestore from '@react-native-firebase/firestore';
 
@@ -28,7 +28,7 @@ const ClassLookup = (props) => {
     };
 
     return (
-        <Background>
+        <Background1>
             <ScrollView contentContainerStyle={styles.scrollViewContainer}>
                 <View style={styles.container}>
                     <Text style={styles.title}>View Student Marks</Text>
@@ -61,7 +61,7 @@ const ClassLookup = (props) => {
                     )}
                 </View>
             </ScrollView>
-        </Background>
+        </Background1>
     );
 };
 

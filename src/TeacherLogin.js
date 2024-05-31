@@ -1,5 +1,5 @@
 import React, { useState } from'react';
-import { StyleSheet, View, Text,ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Background from './Background';
 import Field from './Field';
@@ -34,17 +34,11 @@ const TeacherLogin = (props) => {
         } catch (error) {
             setMessage(error.message);
         }
-        finally {
-            setLoading(false);
-        }
-        };
-        if (loading) {
-            return (
-                <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color="black" />
-                </View>
-            );
-        } 
+    };
+    const handleForgotPassword = () => {
+        // Implement your logic here for password recovery, e.g., sending a password reset email
+        Alert.alert('Forgot Password', 'Please contact your administrator for password recovery.');
+    };
     
     return (
         <Background>
@@ -53,7 +47,7 @@ const TeacherLogin = (props) => {
                 <Field placeholder="Email" keyboardType={"email-address"} value={email} onChangeText={value=>setEmail(value)}/>
                 <Field placeholder="Password" secureTextEntry={true} value={password} onChangeText={value=>setPassword(value)}/>
                 <View style={styles.forgotView}>
-                    <Text style={styles.forgot}>Forgot Password?</Text>
+                    <Text style={styles.forgot} onPress={handleForgotPassword}>Forgot Password?</Text>
                 </View>
                 <Btn pad={12} bgColor='black' textColor='white' btnText='Login' Press={() =>handleLogin()}/>
                 <Text style={styles.forgot}>{message}</Text>

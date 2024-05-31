@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, ScrollView, Alert,ActivityIndicator } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
-import Background from './Background';
+import Background1 from './Background1';
 import Btn from './Btn';
 import StudentFees from './StudentFees';
 
@@ -105,7 +105,7 @@ const Dashboard = ({ navigation, route }) => {
     }, [email, password]);
 
     return (
-        <Background>
+        <Background1>
             <View style={styles.container}>
                 <ScrollView style={styles.scrollView}>
                     <View style={styles.section}>
@@ -113,7 +113,7 @@ const Dashboard = ({ navigation, route }) => {
                         <Text style={styles.subtitle}>Marks</Text>
                         <Btn pad={12} bgColor='green' textColor='white' btnText='Marks' Press={() => navigation.navigate("StudentMarks", { registrationNumber: registrationNumber })} />
                         <Text style={styles.subtitle}>Fee Status</Text>
-                        <StudentFees email={email} password={password} />
+                        <StudentFees registrationNumber={registrationNumber} />
                         <Text style={styles.subtitle}>Timetable</Text>
                         <View style={styles.container1234}>
                             {loading ? (
@@ -145,10 +145,10 @@ const Dashboard = ({ navigation, route }) => {
                     </View>
                 </ScrollView>
                 <View style={styles.logoutButton}>
-                    <Btn pad={12} bgColor='green' textColor='white' btnText='Logout' onPress={() => navigation.navigate("StudentLogin")} />
+                    <Btn pad={12} bgColor='green' textColor='white' btnText='Logout' Press={() => navigation.navigate("StudentLogin")} />
                 </View>
             </View>
-        </Background>
+        </Background1>
     );
 };
 
@@ -164,12 +164,13 @@ const styles = StyleSheet.create({
         paddingBottom: 100, // Add padding to make space for the logout button
     },
     title: {
-        fontSize: 24,
+        fontSize: 35,
         fontWeight: 'bold',
         marginBottom: 10,
         color: 'black',
         paddingBottom: 20,
         textAlign: 'center',
+        marginTop: 45,
     },
     subtitle: {
         fontWeight: 'bold',
@@ -177,6 +178,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         color: 'black',
         paddingTop: 20,
+        marginHorizontal: 20,
     },
     logoutButton: {
         alignItems: 'center',

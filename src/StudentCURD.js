@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import Background from './Background';
+import Background1 from './Background1';
 
 const StudentCURD = ({ navigation }) => {
     const [list, setList] = useState([]);
@@ -53,7 +53,7 @@ const StudentCURD = ({ navigation }) => {
     };
 
     return (
-        <Background>
+        <Background1>
             <View style={styles.container}>
                 <Text style={styles.stu}>Student</Text>
                 <View style={styles.searchContainer}>
@@ -88,7 +88,7 @@ const StudentCURD = ({ navigation }) => {
                     />
                 </View>
             </View>
-        </Background>
+        </Background1>
     );
 };
 

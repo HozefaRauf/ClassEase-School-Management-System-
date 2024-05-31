@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, Alert, TouchableOpacity } from 'react-native';
-import Background from './Background';
+import Background1 from './Background1';
 import DocumentPicker from 'react-native-document-picker';
 import storage from '@react-native-firebase/storage';
 
@@ -37,7 +37,7 @@ const AdminSyllabus = ({ navigation }) => {
     };
 
     return (
-        <Background>
+        <Background1>
             <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.section}>
                     <Text style={styles.title}>Syllabus Management</Text>
@@ -51,7 +51,7 @@ const AdminSyllabus = ({ navigation }) => {
                     ))}
                 </View>
             </ScrollView>
-        </Background>
+        </Background1>
     );
 };
 

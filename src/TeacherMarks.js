@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Alert, TextInput, ScrollView,ActivityIndicator } from 'react-native';
-import Background from './Background';
+import Background1 from './Background1';
 import Btn from './Btn';
 import firestore from '@react-native-firebase/firestore';
 import Field from './Field';
@@ -147,7 +147,7 @@ const TeacherMarks = (props) => {
     };
 
     return (
-        <Background>
+        <Background1>
             <ScrollView contentContainerStyle={styles.scrollViewContainer}>
                 <View style={styles.container}>
                     <Text style={styles.title}>Student Class Lookup</Text>
@@ -195,34 +195,34 @@ const TeacherMarks = (props) => {
                             <View style={styles.buttonContainer}>
                                 <Btn pad={12} bgColor='green' textColor='white' btnText='Update' Press={() => handleUpdateMarks('mid')} />
                                 <Btn pad={12} bgColor='red' textColor='white' btnText='Delete' Press={() => handleDeleteMarks('mid')} />
-</View>
-</View>
-)}
-{finalTermMarks.length > 0 && (
-<View style={styles.resultContainer}>
-<Text style={styles.resultText}>Final Term Marks: </Text>
-{finalTermMarks.map((mark, index) => (
-<View key={index}>
-<TextInput
-style={styles.input}
-placeholder={'Subject ${index + 1}'}
-keyboardType="numeric"
-value={mark}
-onChangeText={(text) => handleMarksChange(text, index, 'finalterm')}
-/>
-</View>
-))}
-<View style={styles.buttonContainer}>
-<Btn pad={12} bgColor='green' textColor='white' btnText='Update' Press={() => handleUpdateMarks('final')} />
-<Btn pad={12} bgColor='red' textColor='white' btnText='Delete' Press={() => handleDeleteMarks('final')} />
-</View>
-</View>
-)}
-</View>
-</ScrollView>
-</Background>
-);
-};
+                            </View>
+                            </View>
+                            )}
+                            {finalTermMarks.length > 0 && (
+                            <View style={styles.resultContainer}>
+                            <Text style={styles.resultText}>Final Term Marks: </Text>
+                            {finalTermMarks.map((mark, index) => (
+                            <View key={index}>
+                            <TextInput
+                            style={styles.input}
+                            placeholder={'Subject ${index + 1}'}
+                            keyboardType="numeric"
+                            value={mark}
+                            onChangeText={(text) => handleMarksChange(text, index, 'finalterm')}
+                            />
+                            </View>
+                            ))}
+                            <View style={styles.buttonContainer}>
+                            <Btn pad={12} bgColor='green' textColor='white' btnText='Update' Press={() => handleUpdateMarks('final')} />
+                            <Btn pad={12} bgColor='red' textColor='white' btnText='Delete' Press={() => handleDeleteMarks('final')} />
+                            </View>
+                            </View>
+                            )}
+                            </View>
+                            </ScrollView>
+                            </Background1>
+                            );
+                            };
 
 const styles = StyleSheet.create({
 scrollViewContainer: {

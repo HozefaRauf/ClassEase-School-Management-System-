@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Alert, TextInput, ScrollView } from 'react-native';
-import Background from './Background';
+import Background1 from './Background1';
 import Btn from './Btn';
 import firestore from '@react-native-firebase/firestore';
 import Field from './Field';
@@ -109,7 +109,7 @@ const AddMarks = (props) => {
     };
 
     return (
-        <Background>
+        <Background1>
             <ScrollView contentContainerStyle={styles.scrollViewContainer}>
                 <View style={styles.container}>
                     <Text style={styles.title}>Add Student Marks</Text>
@@ -160,7 +160,7 @@ const AddMarks = (props) => {
                     <Btn pad={12} bgColor='red' textColor='white' btnText='Add Final Term Marks' Press={() => handleAddMarks('finalterm')} />
                 </View>
             </ScrollView>
-        </Background>
+        </Background1>
     );
 };
 
