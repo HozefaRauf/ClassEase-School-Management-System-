@@ -70,7 +70,7 @@ const TeacherMarks = (props) => {
         let marks;
         switch (term) {
             case 'first':
-                marks = firstMarks;
+                marks = firstTermMarks;
                 break;
             case 'mid':
                 marks = midTermMarks;
